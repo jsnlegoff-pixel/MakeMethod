@@ -35,7 +35,7 @@ npm start
 | `/materials/[id]` | Material detail (pros/cons, compatible processes) |
 | `/processes` | Processes library with search |
 | `/processes/[id]` | Process detail (steps, compatible materials) |
-| `/advisor` | Product brief → preliminary shortlist |
+| `/advisor` | Multi-step Manufacturing Advisor wizard → preliminary shortlist |
 | `/cost-explorer` | Quantity slider, bar comparison, editable assumptions |
 
 ## Data

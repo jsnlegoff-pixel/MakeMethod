@@ -6,10 +6,18 @@ import type {
   EvaluatedOption,
 } from "@/data/types";
 
+export type EvaluateExtras = {
+  targetUnitCost?: number;
+  extraCautions?: string[];
+};
+
 export function evaluateOptions(
   brief: AdvisorBrief,
-  costRows: CostCombination[]
+  costRows: CostCombination[],
+  extras: EvaluateExtras = {}
 ): EvaluatedOption[] {
+  const sharedExtras = extras.extraCautions ?? [];
+
   return costRows
     .map((x) => {
       const mat = materials.find((m) => m.id === x.material);
@@ -18,7 +26,7 @@ export function evaluateOptions(
         throw new Error(`Missing material/process for cost row ${x.id}`);
       }
 
-      const cautions: string[] = [];
+      const cautions: string[] = [...sharedExtras];
       if (!x.fit.includes(brief.shape)) {
         cautions.push("Geometry may be unsuitable");
       }
@@ -47,12 +55,35 @@ export function evaluateOptions(
       }
 
       const total = x.setup + x.unit * brief.quantity;
+      const per = total / brief.quantity;
+
+      if (
+        extras.targetUnitCost != null &&
+        extras.targetUnitCost > 0 &&
+        per > extras.targetUnitCost
+      ) {
+        cautions.push(
+          `Modeled unit cost exceeds $${extras.targetUnitCost.toLocaleString("en-US")} target`
+        );
+      }
+
+      if (brief.priority === "quality" && x.process === "fdm") {
+        cautions.push(
+          "Priority is surface quality — FDM may need substantial finishing"
+        );
+      }
+      if (brief.priority === "flexibility" && x.setup > 2000) {
+        cautions.push(
+          "Priority is low setup / flexibility — higher tooling spend may conflict"
+        );
+      }
+
       return {
         ...x,
         mat,
         proc,
         total,
-        per: total / brief.quantity,
+        per,
         cautions,
         feasible: !cautions.some(
           (c) =>
@@ -62,8 +93,21 @@ export function evaluateOptions(
         ),
       };
     })
-    .sort(
-      (a, b) =>
-        Number(b.feasible) - Number(a.feasible) || a.total - b.total
-    );
+    .sort((a, b) => {
+      const feasibleDelta = Number(b.feasible) - Number(a.feasible);
+      if (feasibleDelta !== 0) return feasibleDelta;
+
+      if (brief.priority === "flexibility") {
+        return a.setup - b.setup || a.total - b.total;
+      }
+      if (brief.priority === "quality") {
+        const score = (opt: EvaluatedOption) =>
+          (opt.process === "injection" ? 0 : 1) +
+          (opt.process === "fdm" ? 2 : 0) +
+          (opt.cautions.some((c) => c.includes("Finishing")) ? 1 : 0);
+        return score(a) - score(b) || a.total - b.total;
+      }
+
+      return a.total - b.total;
+    });
 }

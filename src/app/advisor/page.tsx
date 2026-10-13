@@ -1,5 +1,5 @@
-import { AdvisorPanel } from "@/components/advisor-panel";
+import { AdvisorWizard } from "@/components/wizard/advisor-wizard";
 
 export default function AdvisorPage() {
-  return <AdvisorPanel />;
+  return <AdvisorWizard />;
 }
