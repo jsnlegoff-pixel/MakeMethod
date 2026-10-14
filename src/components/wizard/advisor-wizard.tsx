@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, HelpCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { costs as initialCosts } from "@/data/costs";
 import {
   defaultWizardState,
@@ -15,6 +15,7 @@ import {
   type WizardStepId,
 } from "@/data/wizard";
 import { evaluateOptions } from "@/lib/evaluate";
+import { cn } from "@/lib/utils";
 import { wizardExtraCautions, wizardToBrief } from "@/lib/wizard-map";
 import { WizardResults } from "@/components/wizard/wizard-results";
 import { WizardStepBody } from "@/components/wizard/wizard-step-body";
@@ -181,32 +182,42 @@ export function AdvisorWizard() {
           </Card>
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <Button
-              variant="ghost"
+            <button
+              type="button"
               disabled={index === 0}
               onClick={() => goToIndex(index - 1)}
-              className="h-11 rounded-[10px] font-semibold text-[#52647b]"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "h-11 rounded-[10px] font-semibold text-[#52647b] disabled:opacity-40"
+              )}
             >
-              <ArrowLeft data-icon="inline-start" />
+              <ArrowLeft className="size-4" />
               Back
-            </Button>
+            </button>
             {!isResults && (
-              <Button
+              <button
+                type="button"
                 onClick={() => goToIndex(index + 1)}
-                className="h-11 rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "h-11 rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+                )}
               >
                 {stepMeta.nextLabel ?? "Next"}
-                <ArrowRight data-icon="inline-end" />
-              </Button>
+                <ArrowRight className="size-4" />
+              </button>
             )}
             {isResults && (
-              <Button
-                render={<Link href="/cost-explorer" />}
-                className="h-11 rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+              <Link
+                href="/cost-explorer"
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "inline-flex h-11 items-center rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+                )}
               >
                 Open Cost Explorer
-                <ArrowRight data-icon="inline-end" />
-              </Button>
+                <ArrowRight className="size-4" />
+              </Link>
             )}
           </div>
         </div>

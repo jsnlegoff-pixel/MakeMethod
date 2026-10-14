@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Notice } from "@/components/notice";
 import type { EvaluatedOption } from "@/data/types";
 import type { WizardState } from "@/data/wizard";
+import { cn } from "@/lib/utils";
 import { money } from "@/lib/money";
 
 export function WizardResults({
@@ -26,21 +27,27 @@ export function WizardResults({
           /unit target
         </Badge>
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
+          <button
+            type="button"
             onClick={onEditPriorities}
-            className="h-9 rounded-[10px] border-[#d7e0eb] font-semibold"
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "h-9 rounded-[10px] border-[#d7e0eb] font-semibold"
+            )}
           >
             Edit priorities
-          </Button>
-          <Button
-            variant="outline"
+          </button>
+          <button
+            type="button"
             onClick={onRestart}
-            className="h-9 rounded-[10px] border-[#d7e0eb] font-semibold"
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "h-9 rounded-[10px] border-[#d7e0eb] font-semibold"
+            )}
           >
-            <RotateCcw data-icon="inline-start" />
+            <RotateCcw className="size-4" />
             Start over
-          </Button>
+          </button>
         </div>
       </div>
 
