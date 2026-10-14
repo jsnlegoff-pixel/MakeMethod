@@ -18,8 +18,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${jakarta.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-[#f6f8fb] font-sans text-[#17263b]">
+    <html lang="en" className={`${jakarta.variable} h-full antialiased`} suppressHydrationWarning>
+      <body
+        className="flex min-h-full flex-col bg-[#f6f8fb] font-sans text-[#17263b]"
+        suppressHydrationWarning
+      >
         <SiteHeader />
         <main className="mx-auto w-full max-w-[1200px] flex-1 px-4 py-4 md:px-6 md:py-7">
           {children}
