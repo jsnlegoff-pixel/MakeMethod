@@ -1,3 +1,5 @@
+"use client";
+
 import type { Dispatch, SetStateAction } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,10 +36,16 @@ export function WizardStepBody({
 
   if (stepId === "category") {
     return (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="Product category"
+      >
         {categoryOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="category"
+            value={opt.value}
             selected={state.category === opt.value}
             onSelect={() => patch({ category: opt.value })}
             title={opt.label}
@@ -52,10 +60,16 @@ export function WizardStepBody({
   if (stepId === "size") {
     return (
       <div className="space-y-5">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div
+          className="grid grid-cols-1 gap-3 md:grid-cols-3"
+          role="radiogroup"
+          aria-label="Part size"
+        >
           {sizeBandOptions.map((opt) => (
             <SelectionCard
               key={opt.value}
+              name="size"
+              value={opt.value}
               selected={state.size === opt.value}
               onSelect={() =>
                 patch({
@@ -113,10 +127,16 @@ export function WizardStepBody({
 
   if (stepId === "geometry") {
     return (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3"
+        role="radiogroup"
+        aria-label="Part geometry"
+      >
         {geometryOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="geometry"
+            value={opt.value}
             selected={state.geometry === opt.value}
             onSelect={() => patch({ geometry: opt.value })}
             title={opt.label}
@@ -131,10 +151,16 @@ export function WizardStepBody({
 
   if (stepId === "environment") {
     return (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="Use environment"
+      >
         {environmentOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="environment"
+            value={opt.value}
             selected={state.environment === opt.value}
             onSelect={() => patch({ environment: opt.value })}
             title={opt.label}
@@ -151,10 +177,16 @@ export function WizardStepBody({
 
   if (stepId === "structural") {
     return (
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="Structural needs"
+      >
         {structuralOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="structural"
+            value={opt.value}
             selected={state.structural === opt.value}
             onSelect={() => patch({ structural: opt.value })}
             title={opt.label}
@@ -167,10 +199,16 @@ export function WizardStepBody({
 
   if (stepId === "finish") {
     return (
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div
+        className="grid grid-cols-1 gap-3 md:grid-cols-3"
+        role="radiogroup"
+        aria-label="Finish level"
+      >
         {finishOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="finish"
+            value={opt.value}
             selected={state.finish === opt.value}
             onSelect={() => patch({ finish: opt.value })}
             title={opt.label}
@@ -227,10 +265,16 @@ export function WizardStepBody({
 
   if (stepId === "budget") {
     return (
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div
+        className="grid grid-cols-1 gap-3 md:grid-cols-3"
+        role="radiogroup"
+        aria-label="Tooling budget"
+      >
         {budgetOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="budget"
+            value={opt.value}
             selected={state.budget === opt.value}
             onSelect={() => patch({ budget: opt.value })}
             title={opt.label}
@@ -281,10 +325,16 @@ export function WizardStepBody({
 
   if (stepId === "priority") {
     return (
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div
+        className="grid grid-cols-1 gap-3 md:grid-cols-3"
+        role="radiogroup"
+        aria-label="Decision priority"
+      >
         {priorityOptions.map((opt) => (
           <SelectionCard
             key={opt.value}
+            name="priority"
+            value={opt.value}
             selected={state.priority === opt.value}
             onSelect={() => patch({ priority: opt.value })}
             title={opt.label}

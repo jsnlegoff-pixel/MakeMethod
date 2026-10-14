@@ -25,7 +25,7 @@ import { WhyThisMatters } from "@/components/wizard/why-this-matters";
 
 export function AdvisorWizard() {
   const [stepId, setStepId] = useState<WizardStepId>("category");
-  const [state, setState] = useState(defaultWizardState);
+  const [state, setState] = useState(() => ({ ...defaultWizardState }));
   const [highestIndex, setHighestIndex] = useState(0);
 
   const stepMeta = wizardSteps.find((s) => s.id === stepId)!;
@@ -163,7 +163,7 @@ export function AdvisorWizard() {
                   state={state}
                   results={results}
                   onRestart={() => {
-                    setState(defaultWizardState);
+                    setState({ ...defaultWizardState });
                     setHighestIndex(0);
                     goToIndex(0);
                   }}
