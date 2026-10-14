@@ -17,7 +17,16 @@ npm install
 npm run dev
 ```
 
-Open [http://127.0.0.1:43123](http://127.0.0.1:43123).
+Open [http://127.0.0.1:43123](http://127.0.0.1:43123) or [http://localhost:43123](http://localhost:43123).
+
+If the Advisor looks fine but **nothing is clickable** (stuck on Consumer product, Next does nothing), stop the server, clear the cache, and restart:
+
+```bash
+rm -rf .next
+npm run dev
+```
+
+`next.config.ts` allows both `127.0.0.1` and `localhost` as Next.js 16 `allowedDevOrigins` so client hydration works on either host.
 
 Production build:
 
