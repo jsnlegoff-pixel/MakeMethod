@@ -1,5 +1,3 @@
-export type MaterialId = "hips" | "abs" | "pp" | "petg" | "pla" | "pcabs";
-export type ProcessId = "thermo" | "injection" | "fdm" | "cnc";
 export type ShapeId = "shell" | "tray" | "complex" | "solid";
 export type SizeId = "small" | "medium" | "large";
 export type EnvironmentId = "indoor" | "outdoor";
@@ -7,14 +5,54 @@ export type FinishId = "basic" | "standard" | "premium";
 export type PriorityId = "cost" | "quality" | "flexibility";
 export type BudgetId = "under1000" | "1000-5000" | "over5000";
 
+/** Stable string ids — catalogs are open-ended after Milestone 3. */
+export type MaterialId = string;
+export type ProcessId = string;
+
+export type MaterialFamily =
+  | "plastic"
+  | "metal"
+  | "elastomer"
+  | "composite";
+
+export type RelativeLevel = "low" | "moderate" | "high" | "very-high";
+
+/**
+ * Confidence for library fields that are educational / relative rather than
+ * datasheet-verified numbers.
+ */
+export type DataConfidence =
+  | "qualitative"
+  | "unverified"
+  | "prototype-illustrative";
+
+export interface MaterialProperties {
+  /** Short qualitative characterization — not measured values. */
+  summary: string;
+  /** Relative / educational notes only. */
+  notes: string[];
+  confidence: DataConfidence;
+  /** Explicit reminder shown in UI. */
+  disclaimer: string;
+}
+
 export interface Material {
   id: MaterialId;
   name: string;
   full: string;
+  family: MaterialFamily;
   desc: string;
+  applications: string[];
   pros: string[];
   cons: string[];
   processes: ProcessId[];
+  /** Relative resin/stock cost band — not a quote. */
+  relativeCost: RelativeLevel;
+  relativeCostConfidence: DataConfidence;
+  properties: MaterialProperties;
+  designConsiderations: string[];
+  /** Key into local SVG illustration set. */
+  illustration: MaterialFamily;
 }
 
 export interface Process {
@@ -26,7 +64,23 @@ export interface Process {
   pros: string[];
   cons: string[];
   steps: string[];
+  /** Qualitative volume guidance — verify with suppliers. */
+  typicalVolumes: string;
+  tooling: string[];
+  costDrivers: string[];
+  dfm: string[];
+  illustration: ProcessIllustrationId;
+  confidence: DataConfidence;
 }
+
+export type ProcessIllustrationId =
+  | "molding"
+  | "forming"
+  | "subtractive"
+  | "sheet"
+  | "casting"
+  | "additive"
+  | "deformation";
 
 export interface CostCombination {
   id: string;
@@ -56,3 +110,9 @@ export interface EvaluatedOption extends CostCombination {
   cautions: string[];
   feasible: boolean;
 }
+
+export const PROPERTY_DISCLAIMER =
+  "Qualitative / educational characterization only. Not datasheet values. Verify grades, conditions, and test methods with supplier documentation before design decisions.";
+
+export const RELATIVE_COST_DISCLAIMER =
+  "Relative cost band for planning education only — not a material price index or supplier quote.";
