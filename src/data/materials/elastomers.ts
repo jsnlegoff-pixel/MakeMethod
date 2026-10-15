@@ -146,18 +146,19 @@ export const elastomerMaterials = [
   }),
   mat({
     id: "nbr",
-    name: "Nitrile (NBR)",
-    full: "Acrylonitrile Butadiene Rubber",
+    name: "Buna-N / Nitrile (NBR)",
+    full: "Buna-N (Nitrile, NBR) — Acrylonitrile Butadiene Rubber",
     family: "elastomer",
-    desc: "Oil-resistant rubber widely used for fuel/oil seals and gaskets.",
+    desc: "Oil-resistant rubber (also called Buna-N or NBR) widely used for fuel/oil seals, O-rings, and gaskets.",
     applications: [
       "Oil seals",
       "O-rings",
       "Fuel-system gaskets (compound-dependent)",
+      "Hydraulic seals (compound-dependent)",
     ],
     pros: [
       "Good resistance to many oils and fuels (compound-dependent)",
-      "Common sealing material",
+      "Common sealing / gasket material under the Buna-N name",
       "Broad hardness availability",
     ],
     cons: [
@@ -168,10 +169,11 @@ export const elastomerMaterials = [
     processes: ["compression", "injection", "extrusion"],
     relativeCost: "moderate",
     summary:
-      "Oil-service elastomer family for many industrial sealing duties.",
+      "Buna-N / NBR oil-service elastomer family for many industrial sealing duties.",
     propertyNotes: [
+      "Buna-N, nitrile, and NBR refer to the same elastomer family",
       "Acrylonitrile content trades oil resistance vs low-temp flexibility",
-      "Hydrogenated NBR (HNBR) is a related but different option",
+      "Hydrogenated NBR (HNBR) is a related but different, higher-duty option",
     ],
     designConsiderations: [
       "Match compound to fluid, temperature, and squeeze",
@@ -185,7 +187,7 @@ export const elastomerMaterials = [
       hardnessGuidance:
         "O-ring and gasket compounds are typically specified in Shore A; higher ACN often feels a bit firmer at equal hardness.",
       notes: [
-        "Go-to screening family for oil/fuel gasket duty",
+        "Go-to screening family for oil/fuel gasket duty (Buna-N / NBR)",
         "Outdoor UV/ozone exposure usually needs protection or a different family",
       ],
     }),
@@ -193,9 +195,9 @@ export const elastomerMaterials = [
   mat({
     id: "hnbr",
     name: "HNBR",
-    full: "Hydrogenated Nitrile Butadiene Rubber",
+    full: "Hydrogenated Nitrile Butadiene Rubber (upgraded Buna-N / NBR family)",
     family: "elastomer",
-    desc: "Upgraded nitrile family for hotter, more demanding oil and industrial sealing service.",
+    desc: "Upgraded nitrile (Buna-N) family for hotter, more demanding oil and industrial sealing service.",
     applications: [
       "Automotive seals",
       "Oil-field elastomers",
