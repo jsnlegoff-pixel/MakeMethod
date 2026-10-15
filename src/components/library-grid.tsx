@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Eyebrow } from "@/components/eyebrow";
 import { ElastomerFeelBadges } from "@/components/elastomer-feel";
+import { ElastomerTextureGuide } from "@/components/elastomer-texture-guide";
 import { FabricFeelBadges } from "@/components/fabric-feel";
 import type {
   ElastomerFeel,
@@ -149,6 +150,12 @@ export function LibraryGrid({
               — not approvals.
             </p>
           </div>
+        </div>
+      )}
+
+      {type === "materials" && familyFilter === "elastomer" && (
+        <div className="mb-6">
+          <ElastomerTextureGuide compact />
         </div>
       )}
 

@@ -43,6 +43,9 @@ export const elastomerMaterials = [
       pliability: "soft",
       recovery: "fair",
       gasketFit: "situational",
+      shoreABand: "wide",
+      commonTextures: ["soft-touch", "smooth-matte", "light-texture", "heavy-grip"],
+      buttonFit: "preferred",
       hardnessGuidance:
         "Usually specified across a wide Shore A/D band — pick hardness for the grip or seal duty.",
       notes: [
@@ -90,6 +93,9 @@ export const elastomerMaterials = [
       pliability: "soft",
       recovery: "good",
       gasketFit: "preferred",
+      shoreABand: "40-50",
+      commonTextures: ["smooth-matte", "soft-touch", "dotted", "light-texture"],
+      buttonFit: "preferred",
       hardnessGuidance:
         "Commonly compounded across soft-to-medium Shore A ranges for seals and soft goods.",
       notes: [
@@ -136,6 +142,9 @@ export const elastomerMaterials = [
       pliability: "medium",
       recovery: "good",
       gasketFit: "preferred",
+      shoreABand: "60-70",
+      commonTextures: ["smooth-matte", "orange-peel", "light-texture"],
+      buttonFit: "situational",
       hardnessGuidance:
         "Weatherstrip and gasket compounds span soft-to-firm Shore A — match to squeeze and door/cover geometry.",
       notes: [
@@ -184,6 +193,9 @@ export const elastomerMaterials = [
       pliability: "medium",
       recovery: "good",
       gasketFit: "preferred",
+      shoreABand: "70-80",
+      commonTextures: ["smooth-matte", "light-texture", "orange-peel"],
+      buttonFit: "situational",
       hardnessGuidance:
         "O-ring and gasket compounds are typically specified in Shore A; higher ACN often feels a bit firmer at equal hardness.",
       notes: [
@@ -230,6 +242,9 @@ export const elastomerMaterials = [
       pliability: "medium",
       recovery: "good",
       gasketFit: "preferred",
+      shoreABand: "70-80",
+      commonTextures: ["smooth-matte", "light-texture"],
+      buttonFit: "limited",
       hardnessGuidance:
         "Sealing compounds are hardness-specified like NBR; feel is typically medium rather than ultra-soft.",
       notes: [
@@ -277,6 +292,9 @@ export const elastomerMaterials = [
       pliability: "medium",
       recovery: "fair",
       gasketFit: "common",
+      shoreABand: "50-60",
+      commonTextures: ["smooth-matte", "orange-peel", "light-texture", "dotted"],
+      buttonFit: "common",
       hardnessGuidance:
         "Sheet and extruded gasket stocks span soft sponge to firmer solid Shore A compounds.",
       notes: [
@@ -323,6 +341,9 @@ export const elastomerMaterials = [
       pliability: "firm",
       recovery: "excellent",
       gasketFit: "preferred",
+      shoreABand: "70-80",
+      commonTextures: ["smooth-matte", "light-texture"],
+      buttonFit: "limited",
       hardnessGuidance:
         "Often compounded toward medium-to-firm Shore A for sealing integrity under heat and chemicals.",
       notes: [
@@ -370,6 +391,9 @@ export const elastomerMaterials = [
       pliability: "very-soft",
       recovery: "excellent",
       gasketFit: "limited",
+      shoreABand: "40-50",
+      commonTextures: ["smooth-matte", "soft-touch", "heavy-grip", "dotted"],
+      buttonFit: "common",
       hardnessGuidance:
         "Can be compounded from very soft to firm; soft compounds feel highly pliable and springy.",
       notes: [
@@ -416,6 +440,9 @@ export const elastomerMaterials = [
       pliability: "medium",
       recovery: "fair",
       gasketFit: "limited",
+      shoreABand: "60-70",
+      commonTextures: ["smooth-matte", "heavy-grip", "orange-peel"],
+      buttonFit: "situational",
       hardnessGuidance:
         "Hardness is compound-specified; many general goods sit in medium Shore A bands.",
       notes: [
@@ -462,6 +489,9 @@ export const elastomerMaterials = [
       pliability: "soft",
       recovery: "limited",
       gasketFit: "situational",
+      shoreABand: "50-60",
+      commonTextures: ["smooth-matte", "soft-touch", "orange-peel"],
+      buttonFit: "situational",
       hardnessGuidance:
         "Often soft-to-medium; the standout trait is low rebound / damping, not springiness.",
       notes: [
@@ -508,6 +538,9 @@ export const elastomerMaterials = [
       pliability: "firm",
       recovery: "excellent",
       gasketFit: "preferred",
+      shoreABand: "70-80",
+      commonTextures: ["smooth-matte"],
+      buttonFit: "limited",
       hardnessGuidance:
         "Sealing grades are typically medium-to-firm; soft-touch is rarely the design goal.",
       notes: [
@@ -555,6 +588,9 @@ export const elastomerMaterials = [
       pliability: "firm",
       recovery: "good",
       gasketFit: "situational",
+      shoreABand: "wide",
+      commonTextures: ["smooth-matte", "smooth-gloss", "heavy-grip", "light-texture"],
+      buttonFit: "situational",
       hardnessGuidance:
         "Often specified from soft rubber-like through firm elastomer bands — wear parts skew firmer.",
       notes: [

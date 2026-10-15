@@ -1,5 +1,6 @@
 import type {
   AcousticOpenness,
+  ButtonFit,
   FabricBreathability,
   FabricDrape,
   FabricHand,
@@ -11,6 +12,7 @@ import type {
   PliabilityFeel,
   RecoveryFeel,
 } from "@/data/types";
+import { SHORE_A_BANDS } from "@/data/elastomer-guide";
 import { MATERIAL_TAG_META } from "@/data/materials/tags";
 
 export const MATERIAL_FAMILY_LABELS: Record<MaterialFamily, string> = {
@@ -63,6 +65,17 @@ export const GASKET_FIT_LABELS: Record<GasketFit, string> = {
   common: "Common gasket use",
   preferred: "Preferred for gaskets/seals",
 };
+
+export const BUTTON_FIT_LABELS: Record<ButtonFit, string> = {
+  limited: "Limited button use",
+  situational: "Situational for buttons",
+  common: "Common for buttons",
+  preferred: "Preferred for soft buttons",
+};
+
+export function shoreBandLabel(band: keyof typeof SHORE_A_BANDS) {
+  return SHORE_A_BANDS[band].label;
+}
 
 export const FABRIC_HAND_LABELS: Record<FabricHand, string> = {
   crisp: "Crisp hand",

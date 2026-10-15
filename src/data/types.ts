@@ -54,6 +54,35 @@ export type RecoveryFeel = "limited" | "fair" | "good" | "excellent";
 
 export type GasketFit = "limited" | "situational" | "common" | "preferred";
 
+/**
+ * Educational Shore A screening bands for buttons / soft-touch —
+ * not datasheet claims for a specific grade.
+ */
+export type ShoreABandId =
+  | "30-40"
+  | "40-50"
+  | "50-60"
+  | "60-70"
+  | "70-80"
+  | "80-90"
+  | "wide";
+
+export type ElastomerTextureId =
+  | "smooth-matte"
+  | "smooth-gloss"
+  | "soft-touch"
+  | "light-texture"
+  | "heavy-grip"
+  | "ribbed"
+  | "dotted"
+  | "orange-peel";
+
+export type ButtonFit =
+  | "limited"
+  | "situational"
+  | "common"
+  | "preferred";
+
 export interface ElastomerFeel {
   /** How readily typical compounds flex in soft-good / seal geometries. */
   flexibility: FlexibilityFeel;
@@ -63,7 +92,13 @@ export interface ElastomerFeel {
   recovery: RecoveryFeel;
   /** Family-level gasket / seal screening hint. */
   gasketFit: GasketFit;
-  /** Hardness guidance without inventing Shore values. */
+  /** Educational Shore A band often discussed for this family. */
+  shoreABand: ShoreABandId;
+  /** Textures commonly tooled or finished for buttons / grips. */
+  commonTextures: ElastomerTextureId[];
+  /** Family-level soft-button / keypad screening hint. */
+  buttonFit: ButtonFit;
+  /** Hardness guidance without inventing datasheet values. */
   hardnessGuidance: string;
   notes: string[];
 }
