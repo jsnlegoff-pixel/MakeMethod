@@ -13,7 +13,8 @@ export type MaterialFamily =
   | "plastic"
   | "metal"
   | "elastomer"
-  | "composite";
+  | "composite"
+  | "fabric";
 
 /**
  * Educational specialty tags — usually grade- and certification-dependent.
@@ -32,7 +33,11 @@ export type MaterialTag =
   | "sterilizable"
   | "electrical-insulating"
   | "gasket-sealing"
-  | "oil-fuel-resistant";
+  | "oil-fuel-resistant"
+  | "acoustic"
+  | "softgoods"
+  | "breathable"
+  | "stretch";
 
 export type RelativeLevel = "low" | "moderate" | "high" | "very-high";
 
@@ -60,6 +65,24 @@ export interface ElastomerFeel {
   gasketFit: GasketFit;
   /** Hardness guidance without inventing Shore values. */
   hardnessGuidance: string;
+  notes: string[];
+}
+
+export type FabricHand = "crisp" | "soft" | "plush" | "technical";
+export type FabricDrape = "stiff" | "moderate" | "fluid";
+export type FabricStretch = "none" | "limited" | "moderate" | "high";
+export type FabricBreathability = "low" | "moderate" | "high";
+export type AcousticOpenness = "closed" | "semi-open" | "open";
+
+/** Qualitative fabric / textile feel for softgoods and speaker cloth. */
+export interface FabricFeel {
+  hand: FabricHand;
+  drape: FabricDrape;
+  stretch: FabricStretch;
+  breathability: FabricBreathability;
+  /** Relative acoustic openness for grille / speaker cloth screening. */
+  acousticOpenness: AcousticOpenness;
+  constructionGuidance: string;
   notes: string[];
 }
 
@@ -106,6 +129,8 @@ export interface Material {
   tags: MaterialTag[];
   /** Present for elastomer / rubber families — qualitative feel only. */
   elastomerFeel?: ElastomerFeel;
+  /** Present for fabric / textile families — softgoods & acoustic feel. */
+  fabricFeel?: FabricFeel;
 }
 
 export interface Process {

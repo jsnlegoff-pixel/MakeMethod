@@ -1,6 +1,7 @@
 import type { Material } from "../types";
 import { compositeMaterials } from "./composites";
 import { elastomerMaterials } from "./elastomers";
+import { fabricMaterials } from "./fabrics";
 import { metalMaterials } from "./metals";
 import { plasticMaterials } from "./plastics";
 import { tagsByMaterialId } from "./tags";
@@ -10,6 +11,7 @@ const catalog = [
   ...metalMaterials,
   ...elastomerMaterials,
   ...compositeMaterials,
+  ...fabricMaterials,
 ];
 
 /** Merge central specialty-tag map onto catalog entries. */
@@ -28,6 +30,7 @@ export function materialsByFamily() {
     metal: materials.filter((m) => m.family === "metal"),
     elastomer: materials.filter((m) => m.family === "elastomer"),
     composite: materials.filter((m) => m.family === "composite"),
+    fabric: materials.filter((m) => m.family === "fabric"),
   };
 }
 

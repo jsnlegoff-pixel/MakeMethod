@@ -1,4 +1,9 @@
 import type {
+  AcousticOpenness,
+  FabricBreathability,
+  FabricDrape,
+  FabricHand,
+  FabricStretch,
   FlexibilityFeel,
   GasketFit,
   MaterialFamily,
@@ -13,6 +18,7 @@ export const MATERIAL_FAMILY_LABELS: Record<MaterialFamily, string> = {
   metal: "Metal",
   elastomer: "Elastomer / rubber",
   composite: "Composite",
+  fabric: "Fabric / textile",
 };
 
 export function familyLabel(family: MaterialFamily | string) {
@@ -56,4 +62,36 @@ export const GASKET_FIT_LABELS: Record<GasketFit, string> = {
   situational: "Situational gasket fit",
   common: "Common gasket use",
   preferred: "Preferred for gaskets/seals",
+};
+
+export const FABRIC_HAND_LABELS: Record<FabricHand, string> = {
+  crisp: "Crisp hand",
+  soft: "Soft hand",
+  plush: "Plush hand",
+  technical: "Technical hand",
+};
+
+export const FABRIC_DRAPE_LABELS: Record<FabricDrape, string> = {
+  stiff: "Stiff drape",
+  moderate: "Moderate drape",
+  fluid: "Fluid drape",
+};
+
+export const FABRIC_STRETCH_LABELS: Record<FabricStretch, string> = {
+  none: "Little/no stretch",
+  limited: "Limited stretch",
+  moderate: "Moderate stretch",
+  high: "High stretch",
+};
+
+export const FABRIC_BREATHABILITY_LABELS: Record<FabricBreathability, string> = {
+  low: "Low breathability",
+  moderate: "Moderate breathability",
+  high: "High breathability",
+};
+
+export const ACOUSTIC_OPENNESS_LABELS: Record<AcousticOpenness, string> = {
+  closed: "Acoustically closed",
+  "semi-open": "Semi-open acoustics",
+  open: "Acoustically open",
 };

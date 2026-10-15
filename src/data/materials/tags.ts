@@ -56,6 +56,22 @@ export const MATERIAL_TAG_META: Record<
     label: "Oil / fuel resistant",
     hint: "Often selected for oil and fuel contact — resistance depends on fluid, temperature, and exact compound.",
   },
+  acoustic: {
+    label: "Acoustic / speaker",
+    hint: "Oriented to sound passage or acoustic facing (e.g. grille cloth) — openness depends on weave, knit, and backing.",
+  },
+  softgoods: {
+    label: "Softgoods",
+    hint: "Common in sewn or laminated soft products — bags, covers, sleeves, apparel-adjacent parts.",
+  },
+  breathable: {
+    label: "Breathable",
+    hint: "Allows relatively more air/moisture vapor passage than coated shells — construction still dominates.",
+  },
+  stretch: {
+    label: "Stretch",
+    hint: "Gives and recovers more than typical woven shells — specify stretch direction and recovery needs.",
+  },
 };
 
 export const ALL_MATERIAL_TAGS = Object.keys(
@@ -157,4 +173,18 @@ export const tagsByMaterialId: Record<string, MaterialTag[]> = {
   // Composites
   smc: ["flame-retardant", "hazloc-candidate"],
   gfrp: ["outdoor-capable"],
+
+  // Fabrics / textiles
+  "speaker-cloth": ["acoustic", "softgoods", "breathable"],
+  "acoustic-mesh": ["acoustic", "softgoods", "breathable"],
+  "polyester-woven": ["softgoods"],
+  "nylon-ripstop": ["softgoods", "wear-resistant", "outdoor-capable"],
+  "cotton-canvas": ["softgoods", "breathable"],
+  "stretch-knit": ["softgoods", "stretch", "breathable"],
+  fleece: ["softgoods", "stretch"],
+  "spacer-mesh": ["softgoods", "breathable", "acoustic"],
+  microfiber: ["softgoods"],
+  felt: ["softgoods"],
+  "outdoor-acrylic": ["softgoods", "outdoor-capable", "uv-resistant"],
+  "neoprene-laminate": ["softgoods", "stretch"],
 };

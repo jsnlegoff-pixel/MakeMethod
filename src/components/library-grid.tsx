@@ -8,7 +8,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Eyebrow } from "@/components/eyebrow";
 import { ElastomerFeelBadges } from "@/components/elastomer-feel";
-import type { ElastomerFeel, MaterialFamily, MaterialTag } from "@/data/types";
+import { FabricFeelBadges } from "@/components/fabric-feel";
+import type {
+  ElastomerFeel,
+  FabricFeel,
+  MaterialFamily,
+  MaterialTag,
+} from "@/data/types";
 import { ALL_MATERIAL_TAGS } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
 import { cn } from "@/lib/utils";
@@ -21,6 +27,7 @@ type LibraryItem = {
   family?: string;
   tags?: MaterialTag[];
   elastomerFeel?: ElastomerFeel;
+  fabricFeel?: FabricFeel;
 };
 
 const MATERIAL_FAMILIES: MaterialFamily[] = [
@@ -28,6 +35,7 @@ const MATERIAL_FAMILIES: MaterialFamily[] = [
   "metal",
   "elastomer",
   "composite",
+  "fabric",
 ];
 
 export function LibraryGrid({
@@ -65,7 +73,10 @@ export function LibraryGrid({
       const feelText = x.elastomerFeel
         ? `${x.elastomerFeel.flexibility} ${x.elastomerFeel.pliability} ${x.elastomerFeel.gasketFit} gasket seal rubber soft pliable`
         : "";
-      return `${x.name} ${x.full ?? ""} ${x.desc} ${x.family ?? ""} ${tagText} ${feelText}`
+      const fabricText = x.fabricFeel
+        ? `${x.fabricFeel.hand} ${x.fabricFeel.drape} ${x.fabricFeel.stretch} ${x.fabricFeel.acousticOpenness} speaker cloth softgoods textile fabric knit woven`
+        : "";
+      return `${x.name} ${x.full ?? ""} ${x.desc} ${x.family ?? ""} ${tagText} ${feelText} ${fabricText}`
         .toLowerCase()
         .includes(q);
     });
@@ -162,6 +173,9 @@ export function LibraryGrid({
                     </Badge>
                     {type === "materials" && item.elastomerFeel && (
                       <ElastomerFeelBadges feel={item.elastomerFeel} />
+                    )}
+                    {type === "materials" && item.fabricFeel && (
+                      <FabricFeelBadges feel={item.fabricFeel} />
                     )}
                     {type === "materials" &&
                       (item.tags ?? []).slice(0, 2).map((tag) => (
