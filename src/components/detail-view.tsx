@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eyebrow } from "@/components/eyebrow";
 import type { Material, Process } from "@/data/types";
+import { MATERIAL_TAG_META } from "@/data/materials/tags";
+import { familyLabel, tagLabel } from "@/lib/material-labels";
+import { cn } from "@/lib/utils";
 
 export function DetailView({
   type,
@@ -20,18 +24,23 @@ export function DetailView({
 
   return (
     <div>
-      <Button
-        variant="ghost"
-        render={<Link href={`/${type}`} />}
-        className="mb-2 -ml-2 text-[#52647b]"
+      <Link
+        href={`/${type}`}
+        className={cn(
+          buttonVariants({ variant: "ghost" }),
+          "mb-2 -ml-2 inline-flex text-[#52647b]"
+        )}
       >
-        <ArrowLeft data-icon="inline-start" />
+        <ArrowLeft className="size-4" />
         Back to {type}
-      </Button>
+      </Link>
 
       <div className="mt-2">
         <Eyebrow>
-          {isMaterial ? "Material" : "Manufacturing Process"} Overview
+          {isMaterial
+            ? `${familyLabel(material!.family)} · Material`
+            : "Manufacturing Process"}{" "}
+          Overview
         </Eyebrow>
         <h1 className="mt-2 text-[clamp(32px,5vw,44px)] font-bold tracking-tight text-[#17263b]">
           {item.name}
@@ -39,7 +48,48 @@ export function DetailView({
         <p className="mt-3 max-w-[750px] leading-relaxed text-[#63748a]">
           {material ? `${material.full} — ${material.desc}` : item.desc}
         </p>
+        {material && material.tags.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            <Badge className="rounded-full bg-[#edf3fa] px-2.5 py-1.5 text-xs font-semibold text-[#385b80]">
+              {familyLabel(material.family)}
+            </Badge>
+            {material.tags.map((tag) => (
+              <Badge
+                key={tag}
+                title={MATERIAL_TAG_META[tag].hint}
+                className="rounded-full bg-[#eaf2ff] px-2.5 py-1.5 text-xs font-semibold text-[#155ab5]"
+              >
+                {tagLabel(tag)}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
+
+      {material && material.tags.length > 0 && (
+        <Card className="mt-6 rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
+          <CardHeader>
+            <CardTitle className="text-lg">Specialty tags</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-[13px] leading-relaxed text-[#63748a]">
+              Screening hints only. Certifications (medical, food-contact,
+              flame, HazLoc) apply to specific grades and finished equipment —
+              verify with supplier documentation.
+            </p>
+            <ul className="space-y-2">
+              {material.tags.map((tag) => (
+                <li key={tag} className="text-sm leading-relaxed text-[#17263b]">
+                  <span className="font-semibold text-[#155ab5]">
+                    {tagLabel(tag)}.
+                  </span>{" "}
+                  {MATERIAL_TAG_META[tag].hint}
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mt-8 grid grid-cols-1 gap-[18px] md:grid-cols-2">
         <Card className="rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
@@ -124,14 +174,16 @@ export function DetailView({
       </section>
 
       <div className="mt-8">
-        <Button
-          size="lg"
-          render={<Link href="/advisor" />}
-          className="h-11 rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+        <Link
+          href="/advisor"
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "inline-flex h-11 items-center rounded-[10px] bg-[#2877df] px-5 font-bold text-white hover:bg-[#185fbd]"
+          )}
         >
           Evaluate for my product
-          <ArrowRight data-icon="inline-end" />
-        </Button>
+          <ArrowRight className="size-4" />
+        </Link>
       </div>
     </div>
   );

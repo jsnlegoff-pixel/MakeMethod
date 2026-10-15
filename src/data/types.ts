@@ -15,6 +15,23 @@ export type MaterialFamily =
   | "elastomer"
   | "composite";
 
+/**
+ * Educational specialty tags — usually grade- and certification-dependent.
+ * Never treat as a datasheet claim or regulatory approval.
+ */
+export type MaterialTag =
+  | "medical-grade"
+  | "food-contact"
+  | "chemical-resistant"
+  | "hazloc-candidate"
+  | "flame-retardant"
+  | "uv-resistant"
+  | "outdoor-capable"
+  | "high-temp"
+  | "wear-resistant"
+  | "sterilizable"
+  | "electrical-insulating";
+
 export type RelativeLevel = "low" | "moderate" | "high" | "very-high";
 
 /**
@@ -53,6 +70,11 @@ export interface Material {
   designConsiderations: string[];
   /** Key into local SVG illustration set. */
   illustration: MaterialFamily;
+  /**
+   * Specialty screening tags (medical, chemical, hazloc candidate, …).
+   * Grade-dependent — verify certifications with suppliers.
+   */
+  tags: MaterialTag[];
 }
 
 export interface Process {

@@ -4,6 +4,7 @@ import {
   type Material,
   type MaterialFamily,
   type MaterialProperties,
+  type MaterialTag,
   type ProcessId,
   type RelativeLevel,
 } from "../types";
@@ -37,6 +38,7 @@ export function mat(input: {
   designConsiderations: string[];
   relativeCostConfidence?: DataConfidence;
   propertyConfidence?: DataConfidence;
+  tags?: MaterialTag[];
 }): Material {
   return {
     id: input.id,
@@ -58,5 +60,6 @@ export function mat(input: {
     ),
     designConsiderations: input.designConsiderations,
     illustration: input.family,
+    tags: input.tags ?? [],
   };
 }

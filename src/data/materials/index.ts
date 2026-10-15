@@ -3,13 +3,20 @@ import { compositeMaterials } from "./composites";
 import { elastomerMaterials } from "./elastomers";
 import { metalMaterials } from "./metals";
 import { plasticMaterials } from "./plastics";
+import { tagsByMaterialId } from "./tags";
 
-export const materials: Material[] = [
+const catalog = [
   ...plasticMaterials,
   ...metalMaterials,
   ...elastomerMaterials,
   ...compositeMaterials,
 ];
+
+/** Merge central specialty-tag map onto catalog entries. */
+export const materials: Material[] = catalog.map((m) => ({
+  ...m,
+  tags: tagsByMaterialId[m.id] ?? m.tags ?? [],
+}));
 
 export function getMaterial(id: string) {
   return materials.find((m) => m.id === id);
@@ -23,3 +30,5 @@ export function materialsByFamily() {
     composite: materials.filter((m) => m.family === "composite"),
   };
 }
+
+export { ALL_MATERIAL_TAGS, MATERIAL_TAG_META } from "./tags";

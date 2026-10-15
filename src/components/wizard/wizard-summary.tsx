@@ -115,8 +115,9 @@ export function WizardSummary({ state }: { state: WizardState }) {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-[12px] leading-relaxed text-[#63748a]">
-            Preview only — shortlist screening still uses the existing plastic
-            catalog until Milestone 3 expands materials.
+            Preview only — shortlist screening still uses the current planning
+            model; specialty tags in the library are educational, not
+            certifications.
           </p>
           {previewMaterials.map((m) => (
             <div key={m.id} className="flex items-center gap-3">
