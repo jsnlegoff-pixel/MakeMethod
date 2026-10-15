@@ -1,6 +1,7 @@
 import {
   PROPERTY_DISCLAIMER,
   type DataConfidence,
+  type ElastomerFeel,
   type Material,
   type MaterialFamily,
   type MaterialProperties,
@@ -39,6 +40,7 @@ export function mat(input: {
   relativeCostConfidence?: DataConfidence;
   propertyConfidence?: DataConfidence;
   tags?: MaterialTag[];
+  elastomerFeel?: ElastomerFeel;
 }): Material {
   return {
     id: input.id,
@@ -61,5 +63,8 @@ export function mat(input: {
     designConsiderations: input.designConsiderations,
     illustration: input.family,
     tags: input.tags ?? [],
+    ...(input.elastomerFeel
+      ? { elastomerFeel: input.elastomerFeel }
+      : {}),
   };
 }

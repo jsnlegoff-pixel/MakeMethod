@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Eyebrow } from "@/components/eyebrow";
-import type { MaterialFamily, MaterialTag } from "@/data/types";
+import { ElastomerFeelBadges } from "@/components/elastomer-feel";
+import type { ElastomerFeel, MaterialFamily, MaterialTag } from "@/data/types";
 import { ALL_MATERIAL_TAGS } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ type LibraryItem = {
   full?: string;
   family?: string;
   tags?: MaterialTag[];
+  elastomerFeel?: ElastomerFeel;
 };
 
 const MATERIAL_FAMILIES: MaterialFamily[] = [
@@ -60,7 +62,10 @@ export function LibraryGrid({
       }
       if (!q) return true;
       const tagText = (x.tags ?? []).map(tagLabel).join(" ");
-      return `${x.name} ${x.full ?? ""} ${x.desc} ${x.family ?? ""} ${tagText}`
+      const feelText = x.elastomerFeel
+        ? `${x.elastomerFeel.flexibility} ${x.elastomerFeel.pliability} ${x.elastomerFeel.gasketFit} gasket seal rubber soft pliable`
+        : "";
+      return `${x.name} ${x.full ?? ""} ${x.desc} ${x.family ?? ""} ${tagText} ${feelText}`
         .toLowerCase()
         .includes(q);
     });
@@ -155,6 +160,9 @@ export function LibraryGrid({
                         ? familyLabel(item.family ?? "")
                         : item.family}
                     </Badge>
+                    {type === "materials" && item.elastomerFeel && (
+                      <ElastomerFeelBadges feel={item.elastomerFeel} />
+                    )}
                     {type === "materials" &&
                       (item.tags ?? []).slice(0, 2).map((tag) => (
                         <Badge

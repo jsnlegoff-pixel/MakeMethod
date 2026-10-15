@@ -30,9 +30,38 @@ export type MaterialTag =
   | "high-temp"
   | "wear-resistant"
   | "sterilizable"
-  | "electrical-insulating";
+  | "electrical-insulating"
+  | "gasket-sealing"
+  | "oil-fuel-resistant";
 
 export type RelativeLevel = "low" | "moderate" | "high" | "very-high";
+
+/** Qualitative elastomer “feel” for gasket / soft-good screening — not Shore numbers. */
+export type FlexibilityFeel =
+  | "stiff"
+  | "moderate"
+  | "flexible"
+  | "very-flexible";
+
+export type PliabilityFeel = "firm" | "medium" | "soft" | "very-soft";
+
+export type RecoveryFeel = "limited" | "fair" | "good" | "excellent";
+
+export type GasketFit = "limited" | "situational" | "common" | "preferred";
+
+export interface ElastomerFeel {
+  /** How readily typical compounds flex in soft-good / seal geometries. */
+  flexibility: FlexibilityFeel;
+  /** Soft-touch / squeeze pliability — compound-dependent. */
+  pliability: PliabilityFeel;
+  /** Relative recovery after squeeze (compression-set relevance). */
+  recovery: RecoveryFeel;
+  /** Family-level gasket / seal screening hint. */
+  gasketFit: GasketFit;
+  /** Hardness guidance without inventing Shore values. */
+  hardnessGuidance: string;
+  notes: string[];
+}
 
 /**
  * Confidence for library fields that are educational / relative rather than
@@ -75,6 +104,8 @@ export interface Material {
    * Grade-dependent — verify certifications with suppliers.
    */
   tags: MaterialTag[];
+  /** Present for elastomer / rubber families — qualitative feel only. */
+  elastomerFeel?: ElastomerFeel;
 }
 
 export interface Process {

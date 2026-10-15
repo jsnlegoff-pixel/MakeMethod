@@ -48,6 +48,14 @@ export const MATERIAL_TAG_META: Record<
     label: "Electrical insulating",
     hint: "Commonly used as electrical insulation — dielectric performance is grade- and condition-dependent.",
   },
+  "gasket-sealing": {
+    label: "Gasket / sealing",
+    hint: "Commonly used for gaskets, O-rings, or weatherseals — squeeze, fluid, and compression set still need compound validation.",
+  },
+  "oil-fuel-resistant": {
+    label: "Oil / fuel resistant",
+    hint: "Often selected for oil and fuel contact — resistance depends on fluid, temperature, and exact compound.",
+  },
 };
 
 export const ALL_MATERIAL_TAGS = Object.keys(
@@ -106,15 +114,45 @@ export const tagsByMaterialId: Record<string, MaterialTag[]> = {
   "al-6061": ["hazloc-candidate"],
 
   // Elastomers
+  tpu: ["wear-resistant", "gasket-sealing"],
   silicone: [
     "medical-grade",
     "food-contact",
     "high-temp",
     "sterilizable",
     "outdoor-capable",
+    "gasket-sealing",
   ],
-  epdm: ["outdoor-capable", "uv-resistant", "chemical-resistant"],
-  nbr: ["chemical-resistant"],
+  epdm: [
+    "outdoor-capable",
+    "uv-resistant",
+    "chemical-resistant",
+    "gasket-sealing",
+  ],
+  nbr: ["chemical-resistant", "oil-fuel-resistant", "gasket-sealing"],
+  hnbr: [
+    "chemical-resistant",
+    "oil-fuel-resistant",
+    "high-temp",
+    "gasket-sealing",
+  ],
+  neoprene: ["outdoor-capable", "gasket-sealing"],
+  fkm: [
+    "chemical-resistant",
+    "oil-fuel-resistant",
+    "high-temp",
+    "gasket-sealing",
+  ],
+  "natural-rubber": ["wear-resistant"],
+  sbr: ["wear-resistant"],
+  butyl: ["gasket-sealing", "medical-grade"],
+  ffkm: [
+    "chemical-resistant",
+    "high-temp",
+    "gasket-sealing",
+    "hazloc-candidate",
+  ],
+  "cast-pu": ["wear-resistant"],
 
   // Composites
   smc: ["flame-retardant", "hazloc-candidate"],

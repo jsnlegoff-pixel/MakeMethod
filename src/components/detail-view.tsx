@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eyebrow } from "@/components/eyebrow";
+import { ElastomerFeelPanel } from "@/components/elastomer-feel";
 import type { Material, Process } from "@/data/types";
 import { MATERIAL_TAG_META } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
@@ -89,6 +90,10 @@ export function DetailView({
             </ul>
           </CardContent>
         </Card>
+      )}
+
+      {material?.elastomerFeel && (
+        <ElastomerFeelPanel feel={material.elastomerFeel} />
       )}
 
       <div className="mt-8 grid grid-cols-1 gap-[18px] md:grid-cols-2">

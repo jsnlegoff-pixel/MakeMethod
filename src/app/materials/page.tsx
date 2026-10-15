@@ -7,7 +7,7 @@ export default function MaterialsPage() {
       type="materials"
       items={materials}
       title="Explore Materials"
-      intro="Browse plastics, metals, elastomers, and composites. Filter by family or specialty tags such as medical-grade candidates, chemical resistance, and HazLoc enclosure candidates — then verify grades with suppliers."
+      intro="Browse plastics, metals, elastomers/rubbers, and composites. Filter by family or specialty tags (medical, chemical, gasket/sealing, HazLoc candidates). Elastomer cards show qualitative flexibility and pliability for gasket-style screening — verify compounds with suppliers."
     />
   );
 }
