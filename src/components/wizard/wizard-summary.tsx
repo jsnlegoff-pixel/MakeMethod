@@ -2,6 +2,7 @@ import {
   BadgeDollarSign,
   Boxes,
   Factory,
+  Layers,
   MapPin,
   Package,
   Sparkles,
@@ -18,6 +19,7 @@ import {
 import {
   categoryOptions,
   geometryOptions,
+  materialFamilyOptions,
   sizeBandOptions,
   structuralOptions,
   type WizardState,
@@ -34,7 +36,13 @@ function labelOf<T extends string>(
 }
 
 export function WizardSummary({ state }: { state: WizardState }) {
-  const previewMaterials = materials.slice(0, 4);
+  const previewMaterials = materials
+    .filter((m) =>
+      state.materialFamily === "unsure"
+        ? true
+        : m.family === state.materialFamily
+    )
+    .slice(0, 4);
   const previewProcesses = processes;
 
   const rows = [
@@ -42,6 +50,11 @@ export function WizardSummary({ state }: { state: WizardState }) {
       icon: Package,
       label: "Product type",
       value: labelOf(categoryOptions, state.category),
+    },
+    {
+      icon: Layers,
+      label: "Material type",
+      value: labelOf(materialFamilyOptions, state.materialFamily),
     },
     {
       icon: Boxes,
@@ -110,14 +123,15 @@ export function WizardSummary({ state }: { state: WizardState }) {
       <Card className="rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
         <CardHeader className="pb-2">
           <CardTitle className="text-base text-[#17263b]">
-            Materials in current library
+            {state.materialFamily === "unsure"
+              ? "Materials in current library"
+              : `${labelOf(materialFamilyOptions, state.materialFamily)} library preview`}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-[12px] leading-relaxed text-[#63748a]">
-            Preview only — shortlist screening still uses the current planning
-            model; specialty tags in the library are educational, not
-            certifications.
+            Preview filtered by your material-type preference. Specialty tags are
+            educational screening hints, not certifications.
           </p>
           {previewMaterials.map((m) => (
             <div key={m.id} className="flex items-center gap-3">

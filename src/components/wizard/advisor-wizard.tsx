@@ -51,6 +51,10 @@ export function AdvisorWizard() {
       evaluateOptions(brief, initialCosts, {
         targetUnitCost: state.targetUnitCost,
         extraCautions: wizardExtraCautions(state),
+        materialFamilies:
+          state.materialFamily === "unsure"
+            ? undefined
+            : [state.materialFamily],
       }),
     [brief, state]
   );

@@ -2,6 +2,7 @@ import type {
   BudgetId,
   EnvironmentId,
   FinishId,
+  MaterialFamily,
   PriorityId,
   ShapeId,
   SizeId,
@@ -24,6 +25,9 @@ export type GeometryId =
 
 export type StructuralId = "light" | "moderate" | "structural" | "impact";
 
+/** Preferred material family for shortlist screening — or still exploring. */
+export type MaterialFamilyPref = MaterialFamily | "unsure";
+
 export type WizardPhaseId =
   | "basics"
   | "requirements"
@@ -35,6 +39,7 @@ export type WizardStepId =
   | "size"
   | "geometry"
   | "environment"
+  | "materialFamily"
   | "structural"
   | "finish"
   | "quantity"
@@ -51,6 +56,7 @@ export interface WizardState {
   heightMm: number;
   geometry: GeometryId;
   environment: EnvironmentId;
+  materialFamily: MaterialFamilyPref;
   structural: StructuralId;
   finish: FinishId;
   quantity: number;
@@ -67,6 +73,7 @@ export const defaultWizardState: WizardState = {
   heightMm: 25,
   geometry: "shell",
   environment: "indoor",
+  materialFamily: "plastic",
   structural: "moderate",
   finish: "standard",
   quantity: 500,
@@ -88,7 +95,7 @@ export const wizardPhases: {
   {
     id: "requirements",
     label: "Material Preferences",
-    stepIds: ["structural", "finish"],
+    stepIds: ["materialFamily", "structural", "finish"],
   },
   {
     id: "manufacturing",
@@ -143,6 +150,15 @@ export const wizardSteps: {
     title: "Where will the product be used?",
     prompt: "Environment drives UV, moisture, and weathering considerations.",
     why: "Outdoor or harsh environments may need UV-stabilized grades or alternative polymers. Standard indoor plastics can chalk, fade, or embrittle outdoors without protection.",
+    nextLabel: "Next: Material type",
+  },
+  {
+    id: "materialFamily",
+    phase: "requirements",
+    title: "What type of material are you aiming for?",
+    prompt:
+      "Choose a material family to shortlist against. The planning model used to default to plastics — pick metal, elastomer, fabric, or composite when that is the intent.",
+    why: "Material family is one of the strongest early filters. A gasket, a machined bracket, a speaker cloth, and a molded enclosure rarely share the same shortlist.",
     nextLabel: "Next: Structural needs",
   },
   {
@@ -293,6 +309,50 @@ export const geometryOptions: {
     desc: "Explore options while geometry evolves",
     examples: "Early sketches and mockups",
     mapsTo: "shell",
+  },
+];
+
+export const materialFamilyOptions: {
+  value: MaterialFamilyPref;
+  label: string;
+  desc: string;
+  examples: string;
+}[] = [
+  {
+    value: "plastic",
+    label: "Plastic",
+    desc: "Molded, formed, or printed thermoplastic / thermoset parts",
+    examples: "Enclosures, trays, clips, consumer housings",
+  },
+  {
+    value: "metal",
+    label: "Metal",
+    desc: "Machined, fabricated, stamped, or cast metal parts",
+    examples: "Brackets, plates, frames, hardware",
+  },
+  {
+    value: "elastomer",
+    label: "Elastomer / rubber",
+    desc: "Soft, sealing, or button-like rubber compounds",
+    examples: "Gaskets, O-rings, soft-touch keys, boots",
+  },
+  {
+    value: "fabric",
+    label: "Fabric / textile",
+    desc: "Speaker cloth, softgoods, and textile constructions",
+    examples: "Grille cloth, sleeves, covers, bags",
+  },
+  {
+    value: "composite",
+    label: "Composite",
+    desc: "Fiber-reinforced or molded composite structures",
+    examples: "Lightweight panels, covers, structural shells",
+  },
+  {
+    value: "unsure",
+    label: "Not sure yet",
+    desc: "Compare across families while requirements are still open",
+    examples: "Early concepts exploring plastic vs metal vs rubber",
   },
 ];
 

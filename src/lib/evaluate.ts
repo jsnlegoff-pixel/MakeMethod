@@ -4,11 +4,14 @@ import type {
   AdvisorBrief,
   CostCombination,
   EvaluatedOption,
+  MaterialFamily,
 } from "@/data/types";
 
 export type EvaluateExtras = {
   targetUnitCost?: number;
   extraCautions?: string[];
+  /** When set, only cost rows whose material family is included are returned. */
+  materialFamilies?: MaterialFamily[];
 };
 
 export function evaluateOptions(
@@ -17,6 +20,7 @@ export function evaluateOptions(
   extras: EvaluateExtras = {}
 ): EvaluatedOption[] {
   const sharedExtras = extras.extraCautions ?? [];
+  const familyFilter = extras.materialFamilies;
 
   return costRows
     .map((x) => {
@@ -24,6 +28,10 @@ export function evaluateOptions(
       const proc = processes.find((p) => p.id === x.process);
       if (!mat || !proc) {
         throw new Error(`Missing material/process for cost row ${x.id}`);
+      }
+
+      if (familyFilter && familyFilter.length > 0 && !familyFilter.includes(mat.family)) {
+        return null;
       }
 
       const cautions: string[] = [...sharedExtras];
@@ -78,6 +86,12 @@ export function evaluateOptions(
         );
       }
 
+      if (mat.family === "fabric") {
+        cautions.push(
+          "Fabric/softgoods costs are cut-and-sew planning placeholders — confirm with a softgoods vendor"
+        );
+      }
+
       return {
         ...x,
         mat,
@@ -93,6 +107,7 @@ export function evaluateOptions(
         ),
       };
     })
+    .filter((x): x is EvaluatedOption => x != null)
     .sort((a, b) => {
       const feasibleDelta = Number(b.feasible) - Number(a.feasible);
       if (feasibleDelta !== 0) return feasibleDelta;

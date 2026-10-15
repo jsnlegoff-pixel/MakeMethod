@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Notice } from "@/components/notice";
 import type { EvaluatedOption } from "@/data/types";
-import type { WizardState } from "@/data/wizard";
+import { materialFamilyOptions, type WizardState } from "@/data/wizard";
+import { familyLabel } from "@/lib/material-labels";
 import { cn } from "@/lib/utils";
 import { money } from "@/lib/money";
 
@@ -53,11 +54,27 @@ export function WizardResults({
 
       <Notice>
         <strong>Illustrative model only.</strong> Costs are hypothetical
-        planning inputs for a small, simple part, not verified supplier quotes.
-        New wizard fields (category, dimensions, structural needs, target unit
-        cost) inform explanations and light screens — they do not yet use an
-        expanded property database or full ranking engine (Milestone 4).
+        planning inputs, not verified supplier quotes. Shortlist is filtered by
+        your material-type preference (
+        {materialFamilyOptions.find((o) => o.value === state.materialFamily)
+          ?.label ?? state.materialFamily}
+        ).
       </Notice>
+
+      {results.length === 0 && (
+        <div className="rounded-[14px] border border-[#e0e7f0] bg-white p-5 text-[#566a82]">
+          <p className="text-sm leading-relaxed">
+            No planning combinations match this material type yet. Browse the{" "}
+            <Link
+              href="/materials"
+              className="font-bold text-[#2169c7] hover:underline"
+            >
+              materials library
+            </Link>{" "}
+            or choose <strong>Not sure yet</strong> to compare across families.
+          </p>
+        </div>
+      )}
 
       {results.map((x, i) => (
         <article
@@ -72,7 +89,13 @@ export function WizardResults({
               <h3 className="mt-1.5 text-lg font-semibold text-[#17263b]">
                 {x.name}
               </h3>
-              <p className="mt-1 text-[13px] text-[#63748a]">{x.proc.best}</p>
+              <p className="mt-1 text-[13px] text-[#63748a]">
+                <span className="font-semibold text-[#385b80]">
+                  {familyLabel(x.mat.family)}
+                </span>
+                {" · "}
+                {x.proc.best}
+              </p>
             </div>
             <div className="shrink-0 text-right whitespace-nowrap">
               <strong className="text-[22px] text-[#17263b]">

@@ -12,6 +12,7 @@ import {
 import {
   categoryOptions,
   geometryOptions,
+  materialFamilyOptions,
   sizeBandOptions,
   structuralOptions,
   type WizardState,
@@ -169,6 +170,29 @@ export function WizardStepBody({
                 ? "Controlled indoor use with limited UV exposure"
                 : "Sunlight, weather, or outdoor exposure likely"
             }
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (stepId === "materialFamily") {
+    return (
+      <div
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="Material type"
+      >
+        {materialFamilyOptions.map((opt) => (
+          <SelectionCard
+            key={opt.value}
+            name="materialFamily"
+            value={opt.value}
+            selected={state.materialFamily === opt.value}
+            onSelect={() => patch({ materialFamily: opt.value })}
+            title={opt.label}
+            description={opt.desc}
+            examples={opt.examples}
           />
         ))}
       </div>

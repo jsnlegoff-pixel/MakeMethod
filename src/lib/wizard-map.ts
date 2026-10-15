@@ -25,9 +25,14 @@ export function wizardToBrief(state: WizardState): AdvisorBrief {
 export function wizardExtraCautions(state: WizardState): string[] {
   const cautions: string[] = [];
 
-  if (state.geometry === "flexible") {
+  if (state.geometry === "flexible" && state.materialFamily === "plastic") {
     cautions.push(
-      "Flexible/elastomeric parts may need materials outside the current plastic shortlist"
+      "Flexible geometry with a plastic preference may still need elastomer grades — confirm family fit"
+    );
+  }
+  if (state.geometry === "flexible" && state.materialFamily === "unsure") {
+    cautions.push(
+      "Flexible/elastomeric parts often shortlist better under elastomer / rubber"
     );
   }
   if (state.geometry === "unsure") {
@@ -50,8 +55,15 @@ export function wizardExtraCautions(state: WizardState): string[] {
       "Electronics housings may need EMI, flammability, or sealing checks with suppliers"
     );
   }
-  if (state.targetUnitCost > 0) {
-    // Applied per-option in evaluate via targetUnitCost — listed here for summary only.
+  if (state.materialFamily === "fabric") {
+    cautions.push(
+      "Fabric shortlist uses softgoods planning placeholders — sewing/lamination details are vendor-specific"
+    );
+  }
+  if (state.materialFamily === "metal" && state.finish === "premium") {
+    cautions.push(
+      "Premium metal cosmetics may need plating, polishing, or anodize — confirm finish stack"
+    );
   }
 
   return cautions;

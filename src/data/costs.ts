@@ -1,6 +1,11 @@
 import type { CostCombination } from "./types";
 
+/**
+ * Illustrative planning combinations only — not quotes.
+ * Expanded beyond plastics so the wizard can shortlist by material family.
+ */
 export const costs: CostCombination[] = [
+  // Plastics
   {
     id: "hips-thermo",
     material: "hips",
@@ -45,5 +50,139 @@ export const costs: CostCombination[] = [
     unit: 2.5,
     fit: ["shell", "complex", "solid", "tray"],
     name: "ABS + Injection Molding",
+  },
+  {
+    id: "pc-injection",
+    material: "pc",
+    process: "injection",
+    setup: 4500,
+    unit: 3.2,
+    fit: ["shell", "complex", "solid"],
+    name: "PC + Injection Molding",
+  },
+
+  // Metals
+  {
+    id: "al6061-cnc",
+    material: "al-6061",
+    process: "cnc",
+    setup: 250,
+    unit: 18,
+    fit: ["solid", "complex", "shell"],
+    name: "Aluminum 6061 + CNC",
+  },
+  {
+    id: "ss304-sheet",
+    material: "ss-304",
+    process: "sheet-metal",
+    setup: 800,
+    unit: 12,
+    fit: ["shell", "tray", "solid"],
+    name: "Stainless 304 + Sheet Metal",
+  },
+  {
+    id: "carbon-sheet",
+    material: "carbon-steel",
+    process: "sheet-metal",
+    setup: 600,
+    unit: 8,
+    fit: ["shell", "tray", "solid"],
+    name: "Carbon Steel + Sheet Metal",
+  },
+  {
+    id: "ss316-cnc",
+    material: "ss-316",
+    process: "cnc",
+    setup: 350,
+    unit: 28,
+    fit: ["solid", "complex"],
+    name: "Stainless 316 + CNC",
+  },
+
+  // Elastomers
+  {
+    id: "nbr-compression",
+    material: "nbr",
+    process: "compression",
+    setup: 1200,
+    unit: 1.8,
+    fit: ["shell", "solid", "tray"],
+    name: "Buna-N / NBR + Compression Molding",
+  },
+  {
+    id: "silicone-injection",
+    material: "silicone",
+    process: "injection",
+    setup: 5000,
+    unit: 2.4,
+    fit: ["shell", "complex", "solid"],
+    name: "Silicone + Injection (LSR-class)",
+  },
+  {
+    id: "epdm-extrusion",
+    material: "epdm",
+    process: "extrusion",
+    setup: 900,
+    unit: 1.5,
+    fit: ["shell", "tray"],
+    name: "EPDM + Extrusion",
+  },
+  {
+    id: "tpu-injection",
+    material: "tpu",
+    process: "injection",
+    setup: 3800,
+    unit: 2.8,
+    fit: ["shell", "complex", "solid"],
+    name: "TPU + Injection Molding",
+  },
+
+  // Composites
+  {
+    id: "smc-compression",
+    material: "smc",
+    process: "compression",
+    setup: 6000,
+    unit: 7,
+    fit: ["shell", "tray", "solid"],
+    name: "SMC + Compression Molding",
+  },
+  {
+    id: "gfrp-cnc",
+    material: "gfrp",
+    process: "cnc",
+    setup: 400,
+    unit: 22,
+    fit: ["solid", "shell", "complex"],
+    name: "GFRP + CNC (panel/blank)",
+  },
+
+  // Fabrics / softgoods — setup/unit are planning placeholders for cut-and-sew style work
+  {
+    id: "speaker-cloth-softgoods",
+    material: "speaker-cloth",
+    process: "cnc",
+    setup: 150,
+    unit: 4,
+    fit: ["shell", "tray"],
+    name: "Speaker Cloth + Cut Softgoods",
+  },
+  {
+    id: "nylon-ripstop-softgoods",
+    material: "nylon-ripstop",
+    process: "cnc",
+    setup: 120,
+    unit: 6,
+    fit: ["shell", "tray", "complex"],
+    name: "Nylon Ripstop + Cut Softgoods",
+  },
+  {
+    id: "neoprene-laminate-softgoods",
+    material: "neoprene-laminate",
+    process: "cnc",
+    setup: 180,
+    unit: 7.5,
+    fit: ["shell", "solid", "tray"],
+    name: "Neoprene Laminate + Cut Softgoods",
   },
 ];
