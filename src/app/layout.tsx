@@ -10,15 +10,56 @@ const jakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700", "800"],
 });
 
+const siteTitle = "MakeMethod — Materials & Manufacturing Explorer";
+const siteDescription =
+  "Discover materials, understand manufacturing processes, and evaluate illustrative production costs.";
+
 export const metadata: Metadata = {
-  title: "MakeMethod — Materials & Manufacturing Explorer",
-  description:
-    "Discover materials, understand manufacturing processes, and evaluate illustrative production costs.",
+  metadataBase: new URL("https://themakemethod.com"),
+  title: {
+    default: siteTitle,
+    template: "%s · MakeMethod",
+  },
+  description: siteDescription,
+  applicationName: "MakeMethod",
+  keywords: [
+    "materials",
+    "manufacturing",
+    "plastics",
+    "metals",
+    "elastomers",
+    "fabrics",
+    "processes",
+    "DFM",
+    "cost planning",
+  ],
+  authors: [{ name: "MakeMethod" }],
+  creator: "MakeMethod",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://themakemethod.com",
+    siteName: "MakeMethod",
+    title: siteTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
+  icons: {
+    icon: [{ url: "/brand-mark.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${jakarta.variable} h-full antialiased`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${jakarta.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <body
         className="flex min-h-full flex-col bg-[#f6f8fb] font-sans text-[#17263b]"
         suppressHydrationWarning
