@@ -48,9 +48,6 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
   },
-  icons: {
-    icon: [{ url: "/brand-mark.svg", type: "image/svg+xml" }],
-  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
