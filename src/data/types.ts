@@ -233,12 +233,16 @@ export const RELATIVE_COST_DISCLAIMER =
 /**
  * Status for simulation-oriented fields. Never treat educational text as a
  * verified FEA / SolidWorks library entry.
+ *
+ * `varies-by-grade` replaces the old vague “typical-range” label in the UI.
  */
 export type SimPropertyStatus =
   | "unverified"
   | "educational"
-  | "typical-range"
-  | "grade-dependent";
+  | "varies-by-grade"
+  | "grade-dependent"
+  /** @deprecated Prefer varies-by-grade — kept for older data keys. */
+  | "typical-range";
 
 export type SimPropertyKey =
   | "density"
@@ -253,10 +257,10 @@ export type SimPropertyKey =
 export interface SimPropertyField {
   key: SimPropertyKey;
   label: string;
-  /** Unit hint for when a datasheet value is later entered — not a claim. */
+  /** Unit you will enter later from a datasheet — not a claimed value. */
   unitHint: string;
   status: SimPropertyStatus;
-  /** Display string — qualitative, relative, or “typical range — grade-dependent”. */
+  /** Plain-language expectation — not a paste-ready FEA number. */
   display: string;
   note?: string;
 }
@@ -308,10 +312,10 @@ export interface DfmRuleSet {
 }
 
 export const SIMULATION_PROPERTY_DISCLAIMER =
-  "Unverified / educational screening only — not datasheet values and not ready to paste into FEA or SolidWorks without a grade-specific supplier sheet (condition, test method, and anisotropy matter).";
+  "Prelim education only — these rows explain what each property means and how it usually behaves for this family. They are not datasheet numbers and are not a SolidWorks / FEA material export. Always pull grade-specific values (and test conditions) from a supplier sheet before analysis.";
 
 export const SOLIDWORKS_LIBRARY_NOTE =
-  "SolidWorks and similar custom material libraries require grade-specific datasheet inputs. Family-level guidance here is for orientation only.";
+  "To build a SolidWorks (or similar) custom material, you still need a grade datasheet: enter density, E, Poisson, strength, thermal data, etc. from that sheet — not from this page.";
 
 export const DFM_DISCLAIMER =
   "Educational rules of thumb — not shop standards, mold-maker specs, or certified DFM. Confirm with tooling, process, and grade experts before release.";
