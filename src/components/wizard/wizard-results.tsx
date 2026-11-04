@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AlertTriangle, CheckCircle2, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { DfmRulesCompact } from "@/components/dfm-rules-panel";
 import { Notice } from "@/components/notice";
 import type { EvaluatedOption } from "@/data/types";
 import { materialFamilyOptions, type WizardState } from "@/data/wizard";
@@ -120,6 +121,7 @@ export function WizardResults({
               No obvious conflict with the selected high-level requirements
             </p>
           )}
+          <DfmRulesCompact processId={x.process} materialId={x.material} />
           <div className="mt-3 flex flex-wrap gap-3">
             <Link
               href={`/processes/${x.process}`}

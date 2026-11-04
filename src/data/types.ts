@@ -229,3 +229,89 @@ export const PROPERTY_DISCLAIMER =
 
 export const RELATIVE_COST_DISCLAIMER =
   "Relative cost band for planning education only — not a material price index or supplier quote.";
+
+/**
+ * Status for simulation-oriented fields. Never treat educational text as a
+ * verified FEA / SolidWorks library entry.
+ */
+export type SimPropertyStatus =
+  | "unverified"
+  | "educational"
+  | "typical-range"
+  | "grade-dependent";
+
+export type SimPropertyKey =
+  | "density"
+  | "elasticModulus"
+  | "poissonRatio"
+  | "yieldStrength"
+  | "ultimateStrength"
+  | "thermalConductivity"
+  | "cte"
+  | "specificHeat";
+
+export interface SimPropertyField {
+  key: SimPropertyKey;
+  label: string;
+  /** Unit hint for when a datasheet value is later entered — not a claim. */
+  unitHint: string;
+  status: SimPropertyStatus;
+  /** Display string — qualitative, relative, or “typical range — grade-dependent”. */
+  display: string;
+  note?: string;
+}
+
+export interface SimulationPropertySet {
+  materialId: MaterialId;
+  family: MaterialFamily;
+  fields: SimPropertyField[];
+  qualitativeSummary: string;
+  designConsiderations: string[];
+  disclaimer: string;
+  solidworksNote: string;
+}
+
+export type DfmTopicId =
+  | "wall-thickness"
+  | "draft"
+  | "bend-radius"
+  | "bend-angle"
+  | "hole-to-edge"
+  | "ribs-bosses"
+  | "corners-radii"
+  | "undercuts"
+  | "knit-gates"
+  | "draw-depth"
+  | "tool-access"
+  | "springback"
+  | "shrink-warp"
+  | "general";
+
+export type DfmRuleStatus = "educational" | "unverified";
+
+export interface DfmRule {
+  id: string;
+  topic: DfmTopicId;
+  title: string;
+  guidance: string;
+  status: DfmRuleStatus;
+  /** When set, rule is especially relevant for these families. */
+  families?: MaterialFamily[];
+}
+
+export interface DfmRuleSet {
+  processId: ProcessId;
+  materialId?: MaterialId;
+  family?: MaterialFamily;
+  rules: DfmRule[];
+  disclaimer: string;
+}
+
+export const SIMULATION_PROPERTY_DISCLAIMER =
+  "Unverified / educational screening only — not datasheet values and not ready to paste into FEA or SolidWorks without a grade-specific supplier sheet (condition, test method, and anisotropy matter).";
+
+export const SOLIDWORKS_LIBRARY_NOTE =
+  "SolidWorks and similar custom material libraries require grade-specific datasheet inputs. Family-level guidance here is for orientation only.";
+
+export const DFM_DISCLAIMER =
+  "Educational rules of thumb — not shop standards, mold-maker specs, or certified DFM. Confirm with tooling, process, and grade experts before release.";

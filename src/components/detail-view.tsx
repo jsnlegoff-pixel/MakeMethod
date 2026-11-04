@@ -6,10 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eyebrow } from "@/components/eyebrow";
 import { ElastomerFeelPanel } from "@/components/elastomer-feel";
 import { FabricFeelPanel } from "@/components/fabric-feel";
+import { DfmRulesPanel } from "@/components/dfm-rules-panel";
+import { SimulationPropertiesPanel } from "@/components/simulation-properties-panel";
 import type { Material, Process } from "@/data/types";
 import { MATERIAL_TAG_META } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
 import { cn } from "@/lib/utils";
+
+function uniqueFamilies(items: Material[]) {
+  return Array.from(new Set(items.map((m) => m.family)));
+}
 
 export function DetailView({
   type,
@@ -99,6 +105,8 @@ export function DetailView({
 
       {material?.fabricFeel && <FabricFeelPanel feel={material.fabricFeel} />}
 
+      {material && <SimulationPropertiesPanel material={material} />}
+
       <div className="mt-8 grid grid-cols-1 gap-[18px] md:grid-cols-2">
         <Card className="rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
           <CardHeader>
@@ -145,6 +153,8 @@ export function DetailView({
         </Card>
       )}
 
+      {process && <DfmRulesPanel processId={process.id} />}
+
       <section className="mt-8">
         <h2 className="mb-4 text-[28px] font-bold tracking-tight text-[#17263b]">
           Compatible {isMaterial ? "Processes" : "Materials"}
@@ -180,6 +190,57 @@ export function DetailView({
           </div>
         )}
       </section>
+
+      {material && linked.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-2 text-[28px] font-bold tracking-tight text-[#17263b]">
+            DFM by compatible process
+          </h2>
+          <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
+            Rules of thumb for this material paired with each listed process —
+            educational only, not shop standards.
+          </p>
+          <div className="space-y-3">
+            {linked.map((p) => (
+              <DfmRulesPanel
+                key={p.id}
+                processId={p.id}
+                materialId={material.id}
+                family={material.family}
+                compact
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {process && linked.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-2 text-[28px] font-bold tracking-tight text-[#17263b]">
+            DFM with linked material families
+          </h2>
+          <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
+            Family-aware pairing notes for materials already linked to this
+            process in the library.
+          </p>
+          <div className="space-y-3">
+            {uniqueFamilies(linked as Material[]).map((family) => {
+              const sample = (linked as Material[]).find(
+                (m) => m.family === family
+              );
+              return (
+                <DfmRulesPanel
+                  key={family}
+                  processId={process.id}
+                  materialId={sample?.id}
+                  family={family}
+                  compact
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <div className="mt-8">
         <Link
