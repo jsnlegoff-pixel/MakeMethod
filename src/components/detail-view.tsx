@@ -7,7 +7,7 @@ import { CompatibleLinkCard } from "@/components/compatible-link-card";
 import { Eyebrow } from "@/components/eyebrow";
 import { ElastomerFeelPanel } from "@/components/elastomer-feel";
 import { FabricFeelPanel } from "@/components/fabric-feel";
-import { SimulationPropertiesPanel } from "@/components/simulation-properties-panel";
+import { MaterialDetailSections } from "@/components/material-detail-sections";
 import type { Material, Process } from "@/data/types";
 import { MATERIAL_TAG_META } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
@@ -50,19 +50,19 @@ export function DetailView({
         <h1 className="mt-2 text-[clamp(32px,5vw,44px)] font-bold tracking-tight text-[#17263b]">
           {item.name}
         </h1>
-        <p className="mt-3 max-w-[750px] leading-relaxed text-[#63748a]">
+        <p className="mt-3 max-w-[750px] text-[15px] leading-relaxed text-[#63748a] sm:text-base">
           {material ? `${material.full} — ${material.desc}` : item.desc}
         </p>
-        {material && material.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            <Badge className="rounded-full bg-[#edf3fa] px-2.5 py-1.5 text-xs font-semibold text-[#385b80]">
+        {material && (
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <Badge className="rounded-full bg-[#edf3fa] px-3.5 py-2 text-[14px] font-bold tracking-tight text-[#2a4a6e] sm:px-4 sm:py-2.5 sm:text-[15px]">
               {familyLabel(material.family)}
             </Badge>
             {material.tags.map((tag) => (
               <Badge
                 key={tag}
                 title={MATERIAL_TAG_META[tag].hint}
-                className="rounded-full bg-[#eaf2ff] px-2.5 py-1.5 text-xs font-semibold text-[#155ab5]"
+                className="rounded-full bg-[#eaf2ff] px-3.5 py-2 text-[14px] font-bold tracking-tight text-[#155ab5] sm:px-4 sm:py-2.5 sm:text-[15px]"
               >
                 {tagLabel(tag)}
               </Badge>
@@ -71,8 +71,13 @@ export function DetailView({
         )}
       </div>
 
-      {/* 2) Simulation-ready properties (materials only) */}
-      {material && <SimulationPropertiesPanel material={material} />}
+      {/* Material: tabbed middle (processes default, grades second) */}
+      {material && (
+        <MaterialDetailSections
+          material={material}
+          linked={linked as Process[]}
+        />
+      )}
 
       {/* Process essentials before compatible list */}
       {process && (
@@ -94,54 +99,43 @@ export function DetailView({
         </Card>
       )}
 
-      {/* 3) Compatible links — DFM lives on each card */}
-      <section className="mt-8">
-        <h2 className="mb-1 text-[28px] font-bold tracking-tight text-[#17263b]">
-          Compatible {isMaterial ? "Processes" : "Materials"}
-        </h2>
-        <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
-          {isMaterial
-            ? "Each process card includes educational DFM rules and finish compatibility notes for this pairing — not shop standards or coating certs."
-            : "Each material card includes educational DFM rules and finish compatibility notes for this pairing — not shop standards or coating certs."}
-        </p>
-        {linked.length === 0 ? (
-          <div className="rounded-2xl border border-[#e2e8f0] bg-white px-7 py-10 text-center text-[#66778d]">
-            No compatible {isMaterial ? "processes" : "materials"} listed yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {linked.map((y) => {
-              if (isMaterial && material) {
+      {/* Process pages keep a flat compatible materials list */}
+      {process && (
+        <section className="mt-8">
+          <h2 className="mb-1 text-[28px] font-bold tracking-tight text-[#17263b]">
+            Compatible Materials
+          </h2>
+          <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
+            Each material card includes educational DFM rules and finish
+            compatibility notes for this pairing — not shop standards or coating
+            certs.
+          </p>
+          {linked.length === 0 ? (
+            <div className="rounded-2xl border border-[#e2e8f0] bg-white px-7 py-10 text-center text-[#66778d]">
+              No compatible materials listed yet.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {linked.map((y) => {
+                const linkedMaterial = y as Material;
                 return (
                   <CompatibleLinkCard
                     key={y.id}
-                    href={`/processes/${y.id}`}
+                    href={`/materials/${y.id}`}
                     title={y.name}
                     description={y.desc}
-                    processId={y.id}
-                    materialId={material.id}
-                    family={material.family}
+                    processId={process.id}
+                    materialId={linkedMaterial.id}
+                    family={linkedMaterial.family}
                   />
                 );
-              }
-              const linkedMaterial = y as Material;
-              return (
-                <CompatibleLinkCard
-                  key={y.id}
-                  href={`/materials/${y.id}`}
-                  title={y.name}
-                  description={y.desc}
-                  processId={process!.id}
-                  materialId={linkedMaterial.id}
-                  family={linkedMaterial.family}
-                />
-              );
-            })}
-          </div>
-        )}
-      </section>
+              })}
+            </div>
+          )}
+        </section>
+      )}
 
-      {/* 4) Other essentials */}
+      {/* Essentials below the tabbed middle */}
       <div className="mt-8 grid grid-cols-1 gap-[18px] md:grid-cols-2">
         <Card className="rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
           <CardHeader>

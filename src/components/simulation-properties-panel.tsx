@@ -21,7 +21,14 @@ const FAMILY_TAB = "family" as const;
 
 type TabId = typeof FAMILY_TAB | string;
 
-export function SimulationPropertiesPanel({ material }: { material: Material }) {
+export function SimulationPropertiesPanel({
+  material,
+  embedded = false,
+}: {
+  material: Material;
+  /** When true, sit inside the material page Grades tab (tighter chrome). */
+  embedded?: boolean;
+}) {
   const grades = getSourcedGrades(material.id);
   const defaultGrade = getDefaultSourcedGrade(material.id);
   const showGradeTabs = grades.length > 0;
@@ -40,11 +47,16 @@ export function SimulationPropertiesPanel({ material }: { material: Material }) 
   const isFamilyOverview = showGradeTabs && activeTab === FAMILY_TAB;
 
   return (
-    <Card className="mt-6 overflow-hidden rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
+    <Card
+      className={cn(
+        "overflow-hidden rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]",
+        embedded ? "mt-3" : "mt-6"
+      )}
+    >
       {showGradeTabs ? (
         <div className="border-b border-[#d8e2ee] bg-[#edf2f8] px-3 pt-3 sm:px-4">
           <div className="mb-2 px-1 text-[11px] font-semibold tracking-wide text-[#8190a2] uppercase">
-            Commercial grades
+            {embedded ? "Named grades on this sheet set" : "Commercial grades"}
           </div>
           <div
             role="tablist"
