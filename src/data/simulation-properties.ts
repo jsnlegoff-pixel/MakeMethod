@@ -421,10 +421,13 @@ function formatSourcedDisplay(
   return `${value}${unitSuffix} · ${grade}`;
 }
 
-function buildFields(material: Material): SimPropertyField[] {
+function buildFields(
+  material: Material,
+  gradeId?: string | null
+): SimPropertyField[] {
   const familyDefaults = FAMILY_DEFAULTS[material.family];
   const overrides = MATERIAL_NOTES[material.id] ?? {};
-  const sourcedGrade = getSourcedGrade(material.id);
+  const sourcedGrade = getSourcedGrade(material.id, gradeId);
 
   return FIELD_ORDER.map((key) => {
     const meta = FIELD_META[key];
@@ -479,8 +482,11 @@ function buildFields(material: Material): SimPropertyField[] {
   });
 }
 
+export type SimulationGradeSelection = string | null;
+
 export function getSimulationProperties(
-  materialOrId: Material | MaterialId
+  materialOrId: Material | MaterialId,
+  gradeId?: SimulationGradeSelection
 ): SimulationPropertySet | null {
   const material =
     typeof materialOrId === "string"
@@ -488,12 +494,12 @@ export function getSimulationProperties(
       : materialOrId;
   if (!material) return null;
 
-  const sourcedGrade = getSourcedGrade(material.id);
+  const sourcedGrade = getSourcedGrade(material.id, gradeId);
 
   return {
     materialId: material.id,
     family: material.family,
-    fields: buildFields(material),
+    fields: buildFields(material, gradeId),
     qualitativeSummary: material.properties.summary,
     designConsiderations: material.designConsiderations,
     disclaimer: sourcedGrade
@@ -503,6 +509,8 @@ export function getSimulationProperties(
     ...(sourcedGrade
       ? {
           sourcedGrade: {
+            id: sourcedGrade.id,
+            tabLabel: sourcedGrade.tabLabel,
             gradeName: sourcedGrade.gradeName,
             gradeNotes: sourcedGrade.gradeNotes,
             verifiedAt: sourcedGrade.verifiedAt,

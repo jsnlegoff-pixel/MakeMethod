@@ -18,9 +18,15 @@ type PropInput = {
 };
 
 export type SourcedGradeRecord = {
+  /** Stable id for tabs / URLs, unique within a material. */
+  id: string;
+  /** Short folder-tab label (e.g. MG47). */
+  tabLabel: string;
   materialId: MaterialId;
   gradeName: string;
   gradeNotes?: string;
+  /** Default tab when opening the material page. */
+  isDefault?: boolean;
   citations: PropertyCitation[];
   /** Only keys present on the cited sheet(s). Missing keys = not on datasheet. */
   values: Partial<Record<SimPropertyKey, PropInput>>;
@@ -37,13 +43,17 @@ function cite(
 }
 
 /**
- * First batch — high-use catalog materials with one named commercial grade
- * (or standard temper) each. Numbers only when present on the cited source.
+ * Sourced commercial grades keyed by catalog materialId.
+ * Multiple grades per material power folder tabs on the detail page.
+ * Numbers only when present on the cited source — never invent values.
  */
 export const SOURCED_GRADES: SourcedGradeRecord[] = [
   {
+    id: "mg47",
+    tabLabel: "MG47",
     materialId: "abs",
     gradeName: "SABIC CYCOLAC™ MG47",
+    isDefault: true,
     gradeNotes:
       "Multi-purpose injection-molding ABS. ASTM D638 tensile modulus / yield used below.",
     citations: [
@@ -93,10 +103,120 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "mg38",
+    tabLabel: "MG38",
+    materialId: "abs",
+    gradeName: "SABIC CYCOLAC™ MG38",
+    gradeNotes:
+      "Very high-impact ABS (lower MFR than MG47). Same ASTM tensile band as MG47 on the Americas sheet; compare impact/flow on the TDS.",
+    citations: [
+      cite(
+        "cycolac-mg38",
+        "CYCOLAC™ Resin MG38 technical datasheet (Americas)",
+        "https://cn.hongrunplastics.com/public/uploads/images/20250617/SABIC%20ABS%20CYCOLAC%20Resin%20MG38.pdf",
+        "SABIC (distributor mirror)"
+      ),
+    ],
+    values: {
+      density: {
+        value: 1.04,
+        unit: "g/cm³",
+        method: "ISO 1183",
+        condition: "Specific gravity 1.05 (ASTM D792) on same sheet",
+        citationId: "cycolac-mg38",
+      },
+      elasticModulus: {
+        value: 2.27,
+        unit: "GPa",
+        method: "ASTM D638, 5 mm/min",
+        condition: "Tensile modulus (2270 MPa)",
+        citationId: "cycolac-mg38",
+      },
+      yieldStrength: {
+        value: 44,
+        unit: "MPa",
+        method: "ASTM D638 Type I, 5 mm/min",
+        condition: "Tensile stress at yield",
+        citationId: "cycolac-mg38",
+      },
+      ultimateStrength: {
+        value: 33,
+        unit: "MPa",
+        method: "ASTM D638 Type I, 5 mm/min",
+        condition: "Tensile stress at break",
+        citationId: "cycolac-mg38",
+      },
+      cte: {
+        value: 88.2,
+        unit: "µm/(m·K)",
+        method: "ASTM E831",
+        condition: "−40 °C to 40 °C, flow (8.82×10⁻⁵ 1/°C)",
+        citationId: "cycolac-mg38",
+      },
+    },
+    verifiedAt: VERIFIED,
+  },
+  {
+    id: "hmg47md",
+    tabLabel: "HMG47MD",
+    materialId: "abs",
+    gradeName: "SABIC CYCOLAC™ HMG47MD",
+    gradeNotes:
+      "Medical-oriented ABS (ISO 10993 / FDA claims on TDS). ISO tensile modulus on this sheet is higher than the ASTM value — both listed; ASTM used for E consistency with MG47 tab.",
+    citations: [
+      cite(
+        "cycolac-hmg47md",
+        "CYCOLAC™ Resin HMG47MD technical datasheet (Americas)",
+        "http://www.honcere.com/upfile/2020011917442066.pdf",
+        "SABIC (distributor mirror)"
+      ),
+    ],
+    values: {
+      density: {
+        value: 1.05,
+        unit: "g/cm³",
+        method: "ISO 1183 / ASTM D792",
+        citationId: "cycolac-hmg47md",
+      },
+      elasticModulus: {
+        value: 2.27,
+        unit: "GPa",
+        method: "ASTM D638, 5 mm/min",
+        condition: "Tensile modulus (ISO 527 lists 2.53 GPa on same sheet)",
+        citationId: "cycolac-hmg47md",
+      },
+      yieldStrength: {
+        value: 44,
+        unit: "MPa",
+        method: "ASTM D638 Type I, 5 mm/min",
+        condition: "Tensile stress at yield (ISO 527 lists 50 MPa)",
+        citationId: "cycolac-hmg47md",
+      },
+      ultimateStrength: {
+        value: 33,
+        unit: "MPa",
+        method: "ASTM D638 Type I, 5 mm/min",
+        condition: "Tensile stress at break",
+        citationId: "cycolac-hmg47md",
+      },
+      cte: {
+        value: 88.2,
+        unit: "µm/(m·K)",
+        method: "ISO 11359-2",
+        condition: "−40 °C to 40 °C, flow (8.82×10⁻⁵ 1/°C)",
+        citationId: "cycolac-hmg47md",
+      },
+    },
+    verifiedAt: VERIFIED,
+  },
+  {
+    id: "lexan-141r",
+    tabLabel: "141R",
     materialId: "pc",
     gradeName: "SABIC LEXAN™ 141R",
+    isDefault: true,
     gradeNotes:
-      "General-purpose polycarbonate. Europe/ISO sheet used for tensile modulus; thermal conductivity & CTE from same regional sheet.",
+      "General-purpose polycarbonate (~10–12 MVR class). Europe/ISO sheet for tensile modulus; Cp from Americas Lexan 141 sheet.",
     citations: [
       cite(
         "lexan-141r-eu",
@@ -163,8 +283,70 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "lexan-121r",
+    tabLabel: "121R",
+    materialId: "pc",
+    gradeName: "SABIC LEXAN™ 121R",
+    gradeNotes:
+      "Higher-flow PC (MVR 21 at 300 °C/1.2 kg on Europe TDS) with mold release. Tensile modulus matches 141R on ISO sheet; break strength is lower.",
+    citations: [
+      cite(
+        "lexan-121r-eu",
+        "LEXAN™ Resin 121R technical datasheet (Europe)",
+        "https://www.fist.si/storage/uploads/e8fed0da-b5c4-4e6a-a532-4cba34027e8e/LEXAN%E2%84%A2-Resin_121R_Europe_Technical_Data_Sheet-1.pdf",
+        "SABIC (distributor mirror)"
+      ),
+    ],
+    values: {
+      density: {
+        value: 1.2,
+        unit: "g/cm³",
+        method: "ISO 1183",
+        citationId: "lexan-121r-eu",
+      },
+      elasticModulus: {
+        value: 2.35,
+        unit: "GPa",
+        method: "ISO 527, 1 mm/min",
+        condition: "Tensile modulus",
+        citationId: "lexan-121r-eu",
+      },
+      yieldStrength: {
+        value: 63,
+        unit: "MPa",
+        method: "ISO 527, 50 mm/min",
+        condition: "Tensile stress at yield",
+        citationId: "lexan-121r-eu",
+      },
+      ultimateStrength: {
+        value: 65,
+        unit: "MPa",
+        method: "ISO 527, 50 mm/min",
+        condition: "Tensile stress at break",
+        citationId: "lexan-121r-eu",
+      },
+      thermalConductivity: {
+        value: 0.2,
+        unit: "W/(m·K)",
+        method: "ISO 8302",
+        citationId: "lexan-121r-eu",
+      },
+      cte: {
+        value: 70,
+        unit: "µm/(m·K)",
+        method: "ISO 11359-2",
+        condition: "23 °C to 80 °C, xflow (7.0×10⁻⁵ 1/°C)",
+        citationId: "lexan-121r-eu",
+      },
+    },
+    verifiedAt: VERIFIED,
+  },
+  {
+    id: "c2950",
+    tabLabel: "C2950",
     materialId: "pcabs",
     gradeName: "SABIC CYCOLOY™ C2950",
+    isDefault: true,
     gradeNotes:
       "Flame-retardant PC/ABS. Americas sheet lists flexural modulus, not tensile modulus — E left blank.",
     citations: [
@@ -207,8 +389,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "hp500n",
+    tabLabel: "HP500N",
     materialId: "pp",
     gradeName: "LyondellBasell Moplen HP500N",
+    isDefault: true,
     gradeNotes:
       "PP homopolymer for general-purpose injection molding. ISO Europe typicals.",
     citations: [
@@ -244,8 +429,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "spectar-14471",
+    tabLabel: "Spectar 14471",
     materialId: "petg",
     gradeName: "Eastman Spectar™ 14471 copolyester",
+    isDefault: true,
     gradeNotes: "Clear PETG copolyester sheet/resin grade used for displays and formed parts.",
     citations: [
       cite(
@@ -287,8 +475,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "zytel-101l",
+    tabLabel: "Zytel 101L",
     materialId: "nylon",
     gradeName: "DuPont Zytel® 101L NC010 (PA66)",
+    isDefault: true,
     gradeNotes:
       "Unreinforced lubricated PA66. Dry-as-molded (DAM) mechanical values used; conditioned values differ substantially.",
     citations: [
@@ -332,8 +523,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "delrin-100",
+    tabLabel: "Delrin 100",
     materialId: "pom",
     gradeName: "DuPont Delrin® 100 NC010",
+    isDefault: true,
     gradeNotes: "High-viscosity acetal homopolymer for injection molding.",
     citations: [
       cite(
@@ -369,8 +563,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "t6",
+    tabLabel: "6061-T6",
     materialId: "al-6061",
     gradeName: "Aluminum 6061-T6 (Aluminum Association typical)",
+    isDefault: true,
     gradeNotes:
       "Wrought 6061-T6 typicals attributed to Aluminum Association via ASM/MatWeb compilation. ASTM B209 minima are lower — confirm product form.",
     citations: [
@@ -448,8 +645,68 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "t4",
+    tabLabel: "6061-T4",
+    materialId: "al-6061",
+    gradeName: "Aluminum 6061-T4 / T451 (Aluminum Association typical)",
+    gradeNotes:
+      "Solution heat-treated, naturally aged. Lower yield/UTS than T6; density and modulus match AA typicals for the alloy.",
+    citations: [
+      cite(
+        "aa-6061-t4-matweb",
+        "ASM/MatWeb Aluminum 6061-T4; 6061-T451 material data sheet (AA typicals)",
+        "https://asm.matweb.com/search/specificmaterial.asp?bassnum=ma6061T4",
+        "ASM / MatWeb (citing Aluminum Association typicals)"
+      ),
+    ],
+    values: {
+      density: {
+        value: 2.7,
+        unit: "g/cm³",
+        method: "AA typical",
+        confidence: "association-typical",
+        citationId: "aa-6061-t4-matweb",
+      },
+      elasticModulus: {
+        value: 68.9,
+        unit: "GPa",
+        method: "AA typical",
+        condition: "Average of tension and compression",
+        confidence: "association-typical",
+        citationId: "aa-6061-t4-matweb",
+      },
+      poissonRatio: {
+        value: 0.33,
+        unit: "—",
+        condition: "Estimated from trends in similar Al alloys (per MatWeb note)",
+        confidence: "association-typical",
+        citationId: "aa-6061-t4-matweb",
+      },
+      yieldStrength: {
+        value: 145,
+        unit: "MPa",
+        method: "AA typical",
+        condition: "Tensile yield strength, T4",
+        confidence: "association-typical",
+        citationId: "aa-6061-t4-matweb",
+      },
+      ultimateStrength: {
+        value: 241,
+        unit: "MPa",
+        method: "AA typical",
+        condition: "Ultimate tensile strength, T4",
+        confidence: "association-typical",
+        citationId: "aa-6061-t4-matweb",
+      },
+    },
+    verifiedAt: VERIFIED,
+  },
+  {
+    id: "a240-annealed",
+    tabLabel: "A240 annealed",
     materialId: "ss-304",
     gradeName: "ASTM A240 Type 304 annealed (UNS S30400)",
+    isDefault: true,
     gradeNotes:
       "Yield/UTS are ASTM A240 minimums (annealed flat product), not typical mill values. Physical properties are published typicals for Type 304.",
     citations: [
@@ -526,8 +783,11 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
     verifiedAt: VERIFIED,
   },
   {
+    id: "n1206-70",
+    tabLabel: "N1206-70",
     materialId: "nbr",
     gradeName: "Parker N1206-70 NBR (Buna-N), Shore A ~70",
+    isDefault: true,
     gradeNotes:
       "O-ring compound test report. Elastomers are hyperelastic — sheet lists 100% modulus, not small-strain E; Poisson not listed.",
     citations: [
@@ -558,10 +818,27 @@ export const SOURCED_GRADES: SourcedGradeRecord[] = [
   },
 ];
 
-export function getSourcedGrade(
+export function getSourcedGrades(materialId: MaterialId): SourcedGradeRecord[] {
+  return SOURCED_GRADES.filter((g) => g.materialId === materialId);
+}
+
+export function getDefaultSourcedGrade(
   materialId: MaterialId
 ): SourcedGradeRecord | undefined {
-  return SOURCED_GRADES.find((g) => g.materialId === materialId);
+  const grades = getSourcedGrades(materialId);
+  return grades.find((g) => g.isDefault) ?? grades[0];
+}
+
+/** @deprecated Prefer getSourcedGrades / getDefaultSourcedGrade */
+export function getSourcedGrade(
+  materialId: MaterialId,
+  gradeId?: string | null
+): SourcedGradeRecord | undefined {
+  if (gradeId === null) return undefined;
+  if (gradeId) {
+    return getSourcedGrades(materialId).find((g) => g.id === gradeId);
+  }
+  return getDefaultSourcedGrade(materialId);
 }
 
 export function resolveSourcedValue(
@@ -597,5 +874,5 @@ export function sourcedConfidenceLabel(
 }
 
 export function listSourcedMaterialIds(): MaterialId[] {
-  return SOURCED_GRADES.map((g) => g.materialId);
+  return [...new Set(SOURCED_GRADES.map((g) => g.materialId))];
 }

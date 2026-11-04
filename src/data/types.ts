@@ -300,8 +300,10 @@ export interface SimulationPropertySet {
   designConsiderations: string[];
   disclaimer: string;
   solidworksNote: string;
-  /** When a default commercial grade is loaded for this material. */
+  /** When a named commercial grade is loaded for this material. */
   sourcedGrade?: {
+    id: string;
+    tabLabel: string;
     gradeName: string;
     gradeNotes?: string;
     verifiedAt: string;

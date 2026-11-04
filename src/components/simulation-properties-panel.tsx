@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Notice } from "@/components/notice";
@@ -6,40 +9,96 @@ import {
   simStatusExplainer,
   simStatusLabel,
 } from "@/data/simulation-properties";
-import { sourcedConfidenceLabel } from "@/data/sourced-properties";
+import {
+  getDefaultSourcedGrade,
+  getSourcedGrades,
+  sourcedConfidenceLabel,
+} from "@/data/sourced-properties";
 import type { Material } from "@/data/types";
+import { cn } from "@/lib/utils";
+
+const FAMILY_TAB = "family" as const;
+
+type TabId = typeof FAMILY_TAB | string;
 
 export function SimulationPropertiesPanel({ material }: { material: Material }) {
-  const set = getSimulationProperties(material);
+  const grades = getSourcedGrades(material.id);
+  const defaultGrade = getDefaultSourcedGrade(material.id);
+  const showGradeTabs = grades.length > 0;
+
+  const [activeTab, setActiveTab] = useState<TabId>(
+    defaultGrade?.id ?? FAMILY_TAB
+  );
+
+  const gradeId =
+    !showGradeTabs || activeTab === FAMILY_TAB ? null : activeTab;
+
+  const set = getSimulationProperties(material, gradeId);
   if (!set) return null;
 
   const hasSourced = Boolean(set.sourcedGrade);
+  const isFamilyOverview = showGradeTabs && activeTab === FAMILY_TAB;
 
   return (
-    <Card className="mt-6 rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
+    <Card className="mt-6 overflow-hidden rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
+      {showGradeTabs ? (
+        <div className="border-b border-[#d8e2ee] bg-[#edf2f8] px-3 pt-3 sm:px-4">
+          <div className="mb-2 px-1 text-[11px] font-semibold tracking-wide text-[#8190a2] uppercase">
+            Commercial grades
+          </div>
+          <div
+            role="tablist"
+            aria-label="Commercial grades for this material"
+            className="flex flex-wrap gap-1.5"
+          >
+            <GradeTab
+              id={FAMILY_TAB}
+              label="Family overview"
+              selected={activeTab === FAMILY_TAB}
+              onSelect={setActiveTab}
+            />
+            {grades.map((g) => (
+              <GradeTab
+                key={g.id}
+                id={g.id}
+                label={g.tabLabel}
+                selected={activeTab === g.id}
+                onSelect={setActiveTab}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <CardHeader className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <CardTitle className="text-lg">
-            {hasSourced
-              ? "Properties for prelim simulation"
-              : "Properties for prelim simulation"}
+            Properties for prelim simulation
           </CardTitle>
           <Badge className="rounded-full bg-[#fff4df] px-2.5 py-1 text-[11px] font-semibold text-[#8a5a12]">
             {hasSourced
               ? "Sourced grade — verify before FEA"
-              : "Educational — not a library export"}
+              : isFamilyOverview
+                ? "Family guidance — pick a grade for numbers"
+                : "Educational — not a library export"}
           </Badge>
         </div>
         <p className="text-[13px] leading-relaxed font-normal text-[#63748a]">
           {hasSourced ? (
             <>
-              Default commercial grade:{" "}
+              Showing{" "}
               <strong className="text-[#17263b]">
                 {set.sourcedGrade!.gradeName}
               </strong>
               . Numbers below are taken from the cited sheet where available;
               blank rows mean the property was not on that datasheet.{" "}
               {set.qualitativeSummary}
+            </>
+          ) : isFamilyOverview ? (
+            <>
+              Family-level guidance for {material.name} — no invented numbers.
+              Switch to a named commercial grade tab above to load sourced
+              datasheet values and citations. {set.qualitativeSummary}
             </>
           ) : (
             <>
@@ -214,5 +273,35 @@ export function SimulationPropertiesPanel({ material }: { material: Material }) 
         </p>
       </CardContent>
     </Card>
+  );
+}
+
+function GradeTab({
+  id,
+  label,
+  selected,
+  onSelect,
+}: {
+  id: TabId;
+  label: string;
+  selected: boolean;
+  onSelect: (id: TabId) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={selected}
+      id={`grade-tab-${id}`}
+      onClick={() => onSelect(id)}
+      className={cn(
+        "relative rounded-t-[10px] border border-b-0 px-3.5 py-2 text-[13px] font-semibold transition-colors",
+        selected
+          ? "-mb-px border-[#d8e2ee] bg-white text-[#17263b] shadow-[0_-1px_0_#fff]"
+          : "border-transparent bg-[#dce5f0] text-[#52647b] hover:bg-[#d2dde9] hover:text-[#17263b]"
+      )}
+    >
+      {label}
+    </button>
   );
 }
