@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { CompatibleLinkCard } from "@/components/compatible-link-card";
-import { SimulationPropertiesPanel } from "@/components/simulation-properties-panel";
+import {
+  CommercialGradeCard,
+  FamilyGuidanceCard,
+} from "@/components/commercial-grade-card";
 import type { Material, Process } from "@/data/types";
 import { getSourcedGrades } from "@/data/sourced-properties";
 import { cn } from "@/lib/utils";
@@ -17,7 +20,8 @@ export function MaterialDetailSections({
   linked: Process[];
 }) {
   const [section, setSection] = useState<SectionTab>("processes");
-  const gradeCount = getSourcedGrades(material.id).length;
+  const grades = getSourcedGrades(material.id);
+  const gradeCount = grades.length;
 
   return (
     <div className="mt-8">
@@ -97,13 +101,26 @@ export function MaterialDetailSections({
             aria-labelledby="material-section-grades"
           >
             <h2 className="text-[22px] font-bold tracking-tight text-[#17263b] sm:text-[26px]">
-              Commercial grades &amp; simulation properties
+              Commercial grades
             </h2>
-            <p className="mt-1.5 mb-2 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
-              Switch named datasheet grades inside the panel below. Numbers are
-              sourced only — blank means not on that sheet.
+            <p className="mt-1.5 mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
+              One card per sourced datasheet grade — key numbers and citations
+              only. Blank properties mean they were not on that sheet; never
+              invent FEA inputs.
             </p>
-            <SimulationPropertiesPanel material={material} embedded />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {grades.length > 0 ? (
+                grades.map((g) => (
+                  <CommercialGradeCard
+                    key={g.id}
+                    material={material}
+                    grade={g}
+                  />
+                ))
+              ) : (
+                <FamilyGuidanceCard material={material} />
+              )}
+            </div>
           </div>
         )}
       </div>

@@ -20,12 +20,12 @@ type PropInput = {
 export type SourcedGradeRecord = {
   /** Stable id for tabs / URLs, unique within a material. */
   id: string;
-  /** Short folder-tab label (e.g. MG47). */
+  /** Short label on the grade card (e.g. MG47). */
   tabLabel: string;
   materialId: MaterialId;
   gradeName: string;
   gradeNotes?: string;
-  /** Default tab when opening the material page. */
+  /** Preferred grade when a single default is needed. */
   isDefault?: boolean;
   citations: PropertyCitation[];
   /** Only keys present on the cited sheet(s). Missing keys = not on datasheet. */
@@ -44,7 +44,7 @@ function cite(
 
 /**
  * Sourced commercial grades keyed by catalog materialId.
- * Multiple grades per material power folder tabs on the detail page.
+ * Multiple grades per material render as cards on the Commercial grades tab.
  * Numbers only when present on the cited source — never invent values.
  */
 export const SOURCED_GRADES: SourcedGradeRecord[] = [
