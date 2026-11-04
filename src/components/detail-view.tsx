@@ -3,19 +3,15 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CompatibleLinkCard } from "@/components/compatible-link-card";
 import { Eyebrow } from "@/components/eyebrow";
 import { ElastomerFeelPanel } from "@/components/elastomer-feel";
 import { FabricFeelPanel } from "@/components/fabric-feel";
-import { DfmRulesPanel } from "@/components/dfm-rules-panel";
 import { SimulationPropertiesPanel } from "@/components/simulation-properties-panel";
 import type { Material, Process } from "@/data/types";
 import { MATERIAL_TAG_META } from "@/data/materials/tags";
 import { familyLabel, tagLabel } from "@/lib/material-labels";
 import { cn } from "@/lib/utils";
-
-function uniqueFamilies(items: Material[]) {
-  return Array.from(new Set(items.map((m) => m.family)));
-}
 
 export function DetailView({
   type,
@@ -43,6 +39,7 @@ export function DetailView({
         Back to {type}
       </Link>
 
+      {/* 1) Overview */}
       <div className="mt-2">
         <Eyebrow>
           {isMaterial
@@ -74,39 +71,77 @@ export function DetailView({
         )}
       </div>
 
-      {material && material.tags.length > 0 && (
-        <Card className="mt-6 rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
+      {/* 2) Simulation-ready properties (materials only) */}
+      {material && <SimulationPropertiesPanel material={material} />}
+
+      {/* Process essentials before compatible list */}
+      {process && (
+        <Card className="mt-8 rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
           <CardHeader>
-            <CardTitle className="text-lg">Specialty tags</CardTitle>
+            <CardTitle className="text-lg">How it works</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-[13px] leading-relaxed text-[#63748a]">
-              Screening hints only. Certifications (medical, food-contact,
-              flame, HazLoc) apply to specific grades and finished equipment —
-              verify with supplier documentation.
-            </p>
-            <ul className="space-y-2">
-              {material.tags.map((tag) => (
-                <li key={tag} className="text-sm leading-relaxed text-[#17263b]">
-                  <span className="font-semibold text-[#155ab5]">
-                    {tagLabel(tag)}.
-                  </span>{" "}
-                  {MATERIAL_TAG_META[tag].hint}
-                </li>
+          <CardContent>
+            <ol className="list-decimal space-y-2 pl-5 leading-relaxed text-[#17263b]">
+              {process.steps.map((v) => (
+                <li key={v}>{v}</li>
               ))}
-            </ul>
+            </ol>
+            <p className="mt-4 text-[13px] text-[#63748a]">
+              <strong className="text-[#17263b]">Typical fit:</strong>{" "}
+              {process.best}
+            </p>
           </CardContent>
         </Card>
       )}
 
-      {material?.elastomerFeel && (
-        <ElastomerFeelPanel feel={material.elastomerFeel} />
-      )}
+      {/* 3) Compatible links — DFM lives on each card */}
+      <section className="mt-8">
+        <h2 className="mb-1 text-[28px] font-bold tracking-tight text-[#17263b]">
+          Compatible {isMaterial ? "Processes" : "Materials"}
+        </h2>
+        <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
+          {isMaterial
+            ? "Each process card includes educational DFM rules of thumb for this material pairing — not shop standards."
+            : "Each material card includes educational DFM rules of thumb for this process pairing — not shop standards."}
+        </p>
+        {linked.length === 0 ? (
+          <div className="rounded-2xl border border-[#e2e8f0] bg-white px-7 py-10 text-center text-[#66778d]">
+            No compatible {isMaterial ? "processes" : "materials"} listed yet.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {linked.map((y) => {
+              if (isMaterial && material) {
+                return (
+                  <CompatibleLinkCard
+                    key={y.id}
+                    href={`/processes/${y.id}`}
+                    title={y.name}
+                    description={y.desc}
+                    processId={y.id}
+                    materialId={material.id}
+                    family={material.family}
+                  />
+                );
+              }
+              const linkedMaterial = y as Material;
+              return (
+                <CompatibleLinkCard
+                  key={y.id}
+                  href={`/materials/${y.id}`}
+                  title={y.name}
+                  description={y.desc}
+                  processId={process!.id}
+                  materialId={linkedMaterial.id}
+                  family={linkedMaterial.family}
+                />
+              );
+            })}
+          </div>
+        )}
+      </section>
 
-      {material?.fabricFeel && <FabricFeelPanel feel={material.fabricFeel} />}
-
-      {material && <SimulationPropertiesPanel material={material} />}
-
+      {/* 4) Other essentials */}
       <div className="mt-8 grid grid-cols-1 gap-[18px] md:grid-cols-2">
         <Card className="rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
           <CardHeader>
@@ -134,113 +169,11 @@ export function DetailView({
         </Card>
       </div>
 
-      {process && (
-        <Card className="mt-8 rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908]">
-          <CardHeader>
-            <CardTitle className="text-lg">How it works</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ol className="list-decimal space-y-2 pl-5 leading-relaxed text-[#17263b]">
-              {process.steps.map((v) => (
-                <li key={v}>{v}</li>
-              ))}
-            </ol>
-            <p className="mt-4 text-[13px] text-[#63748a]">
-              <strong className="text-[#17263b]">Typical fit:</strong>{" "}
-              {process.best}
-            </p>
-          </CardContent>
-        </Card>
+      {material?.elastomerFeel && (
+        <ElastomerFeelPanel feel={material.elastomerFeel} />
       )}
 
-      {process && <DfmRulesPanel processId={process.id} />}
-
-      <section className="mt-8">
-        <h2 className="mb-4 text-[28px] font-bold tracking-tight text-[#17263b]">
-          Compatible {isMaterial ? "Processes" : "Materials"}
-        </h2>
-        {linked.length === 0 ? (
-          <div className="rounded-2xl border border-[#e2e8f0] bg-white px-7 py-10 text-center text-[#66778d]">
-            No compatible {isMaterial ? "processes" : "materials"} listed yet.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {linked.map((y) => (
-              <Link
-                key={y.id}
-                href={`/${isMaterial ? "processes" : "materials"}/${y.id}`}
-                className="group"
-              >
-                <Card className="h-full rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908] transition duration-150 group-hover:-translate-y-0.5 group-hover:border-[#8eb7ef]">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold text-[#17263b]">
-                      {y.name}
-                    </h3>
-                    <p className="mt-2 text-[13px] leading-relaxed text-[#63748a]">
-                      {y.desc}
-                    </p>
-                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#2169c7]">
-                      Learn more
-                      <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5" />
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {material && linked.length > 0 && (
-        <section className="mt-8">
-          <h2 className="mb-2 text-[28px] font-bold tracking-tight text-[#17263b]">
-            DFM by compatible process
-          </h2>
-          <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
-            Rules of thumb for this material paired with each listed process —
-            educational only, not shop standards.
-          </p>
-          <div className="space-y-3">
-            {linked.map((p) => (
-              <DfmRulesPanel
-                key={p.id}
-                processId={p.id}
-                materialId={material.id}
-                family={material.family}
-                compact
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {process && linked.length > 0 && (
-        <section className="mt-8">
-          <h2 className="mb-2 text-[28px] font-bold tracking-tight text-[#17263b]">
-            DFM with linked material families
-          </h2>
-          <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
-            Family-aware pairing notes for materials already linked to this
-            process in the library.
-          </p>
-          <div className="space-y-3">
-            {uniqueFamilies(linked as Material[]).map((family) => {
-              const sample = (linked as Material[]).find(
-                (m) => m.family === family
-              );
-              return (
-                <DfmRulesPanel
-                  key={family}
-                  processId={process.id}
-                  materialId={sample?.id}
-                  family={family}
-                  compact
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
+      {material?.fabricFeel && <FabricFeelPanel feel={material.fabricFeel} />}
 
       <div className="mt-8">
         <Link

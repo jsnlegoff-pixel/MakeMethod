@@ -155,7 +155,7 @@ export function DfmRulesCompact({
       </ul>
       {set.rules.length > 3 ? (
         <p className="mt-2 text-[11px] text-[#63748a]">
-          +{set.rules.length - 3} more on the material and process detail pages.
+          +{set.rules.length - 3} more in the compatible cards on detail pages.
         </p>
       ) : (
         <p className="mt-2 text-[11px] text-[#8a5a12]">{set.disclaimer}</p>
