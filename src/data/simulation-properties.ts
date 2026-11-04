@@ -1,4 +1,8 @@
 import { getMaterial } from "./materials";
+import {
+  getSourcedGrade,
+  resolveSourcedValue,
+} from "./sourced-properties";
 import type {
   Material,
   MaterialFamily,
@@ -11,6 +15,7 @@ import type {
 import {
   SIMULATION_PROPERTY_DISCLAIMER,
   SOLIDWORKS_LIBRARY_NOTE,
+  SOURCED_PROPERTY_DISCLAIMER,
 } from "./types";
 
 const FIELD_META: Record<
@@ -407,14 +412,62 @@ const FIELD_ORDER: SimPropertyKey[] = [
   "specificHeat",
 ];
 
+function formatSourcedDisplay(
+  value: number,
+  unit: string,
+  grade: string
+): string {
+  const unitSuffix = unit === "—" ? "" : ` ${unit}`;
+  return `${value}${unitSuffix} · ${grade}`;
+}
+
 function buildFields(material: Material): SimPropertyField[] {
   const familyDefaults = FAMILY_DEFAULTS[material.family];
   const overrides = MATERIAL_NOTES[material.id] ?? {};
+  const sourcedGrade = getSourcedGrade(material.id);
 
   return FIELD_ORDER.map((key) => {
     const meta = FIELD_META[key];
     const base = familyDefaults[key];
     const over = overrides[key];
+    const sourced = sourcedGrade
+      ? resolveSourcedValue(sourcedGrade, key)
+      : null;
+
+    if (sourced) {
+      return {
+        key,
+        label: meta.label,
+        unitHint: meta.unitHint,
+        status: "grade-dependent" as const,
+        display: formatSourcedDisplay(
+          sourced.value,
+          sourced.unit,
+          sourced.grade
+        ),
+        note: [
+          sourced.method ? `Method: ${sourced.method}` : null,
+          sourced.condition ? `Condition: ${sourced.condition}` : null,
+          `Source: ${sourced.citation.title}`,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+        sourced,
+      };
+    }
+
+    if (sourcedGrade) {
+      return {
+        key,
+        label: meta.label,
+        unitHint: meta.unitHint,
+        status: "unverified" as const,
+        display: `Not on datasheet for ${sourcedGrade.gradeName}`,
+        note:
+          "This property was not listed on the cited grade sheet — leave blank in FEA until you have a value from a sheet that includes it.",
+      };
+    }
+
     return {
       key,
       label: meta.label,
@@ -435,14 +488,28 @@ export function getSimulationProperties(
       : materialOrId;
   if (!material) return null;
 
+  const sourcedGrade = getSourcedGrade(material.id);
+
   return {
     materialId: material.id,
     family: material.family,
     fields: buildFields(material),
     qualitativeSummary: material.properties.summary,
     designConsiderations: material.designConsiderations,
-    disclaimer: SIMULATION_PROPERTY_DISCLAIMER,
+    disclaimer: sourcedGrade
+      ? SOURCED_PROPERTY_DISCLAIMER
+      : SIMULATION_PROPERTY_DISCLAIMER,
     solidworksNote: SOLIDWORKS_LIBRARY_NOTE,
+    ...(sourcedGrade
+      ? {
+          sourcedGrade: {
+            gradeName: sourcedGrade.gradeName,
+            gradeNotes: sourcedGrade.gradeNotes,
+            verifiedAt: sourcedGrade.verifiedAt,
+            citations: sourcedGrade.citations,
+          },
+        }
+      : {}),
   };
 }
 

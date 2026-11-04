@@ -5,4 +5,5 @@ export * from "./costs";
 export * from "./advisor-options";
 export * from "./wizard";
 export * from "./simulation-properties";
+export * from "./sourced-properties";
 export * from "./dfm-rules";

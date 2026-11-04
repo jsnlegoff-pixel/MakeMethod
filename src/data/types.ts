@@ -263,6 +263,33 @@ export interface SimPropertyField {
   /** Plain-language expectation — not a paste-ready FEA number. */
   display: string;
   note?: string;
+  /** Present when a concrete grade datasheet value was recorded. */
+  sourced?: SourcedPropertyValue;
+}
+
+export interface PropertyCitation {
+  id: string;
+  title: string;
+  url: string;
+  publisher: string;
+  /** ISO date this agent verified the linked sheet. */
+  verifiedAt: string;
+}
+
+export type SourcedValueConfidence =
+  | "datasheet-typical"
+  | "standard-minimum"
+  | "association-typical";
+
+export interface SourcedPropertyValue {
+  value: number;
+  unit: string;
+  /** Named commercial grade / temper / compound on the sheet. */
+  grade: string;
+  method?: string;
+  condition?: string;
+  confidence: SourcedValueConfidence;
+  citation: PropertyCitation;
 }
 
 export interface SimulationPropertySet {
@@ -273,6 +300,13 @@ export interface SimulationPropertySet {
   designConsiderations: string[];
   disclaimer: string;
   solidworksNote: string;
+  /** When a default commercial grade is loaded for this material. */
+  sourcedGrade?: {
+    gradeName: string;
+    gradeNotes?: string;
+    verifiedAt: string;
+    citations: PropertyCitation[];
+  };
 }
 
 export type DfmTopicId =
@@ -314,8 +348,11 @@ export interface DfmRuleSet {
 export const SIMULATION_PROPERTY_DISCLAIMER =
   "Prelim education only — these rows explain what each property means and how it usually behaves for this family. They are not datasheet numbers and are not a SolidWorks / FEA material export. Always pull grade-specific values (and test conditions) from a supplier sheet before analysis.";
 
+export const SOURCED_PROPERTY_DISCLAIMER =
+  "Sourced numbers below come from a named commercial grade datasheet or published standard/association typical. They are still not a substitute for verifying the exact grade, lot, condition, and test method before FEA or SolidWorks library entry.";
+
 export const SOLIDWORKS_LIBRARY_NOTE =
-  "To build a SolidWorks (or similar) custom material, you still need a grade datasheet: enter density, E, Poisson, strength, thermal data, etc. from that sheet — not from this page.";
+  "To build a SolidWorks (or similar) custom material, enter density, E, Poisson, strength, thermal data, etc. from the grade datasheet you will actually buy — cite the same sheet, and re-check values if the grade or condition changes.";
 
 export const DFM_DISCLAIMER =
   "Educational rules of thumb — not shop standards, mold-maker specs, or certified DFM. Confirm with tooling, process, and grade experts before release.";
