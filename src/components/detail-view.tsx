@@ -101,8 +101,8 @@ export function DetailView({
         </h2>
         <p className="mb-4 max-w-[720px] text-[13px] leading-relaxed text-[#63748a]">
           {isMaterial
-            ? "Each process card includes educational DFM rules of thumb for this material pairing — not shop standards."
-            : "Each material card includes educational DFM rules of thumb for this process pairing — not shop standards."}
+            ? "Each process card includes educational DFM rules and finish compatibility notes for this pairing — not shop standards or coating certs."
+            : "Each material card includes educational DFM rules and finish compatibility notes for this pairing — not shop standards or coating certs."}
         </p>
         {linked.length === 0 ? (
           <div className="rounded-2xl border border-[#e2e8f0] bg-white px-7 py-10 text-center text-[#66778d]">

@@ -5,10 +5,20 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getDfmRules } from "@/data/dfm-rules";
-import type { MaterialFamily, MaterialId, ProcessId } from "@/data/types";
+import {
+  finishLabel,
+  getFinishCompatibility,
+} from "@/data/finishes";
+import type {
+  FinishCompatibilityNote,
+  MaterialFamily,
+  MaterialId,
+  ProcessId,
+} from "@/data/types";
 import { cn } from "@/lib/utils";
 
-const PREVIEW_COUNT = 2;
+const DFM_PREVIEW = 2;
+const FINISH_PREVIEW = 3;
 
 export function CompatibleLinkCard({
   href,
@@ -25,10 +35,21 @@ export function CompatibleLinkCard({
   materialId?: MaterialId;
   family?: MaterialFamily;
 }) {
-  const set = getDfmRules({ processId, materialId, family });
-  const rules = set?.rules ?? [];
-  const preview = rules.slice(0, PREVIEW_COUNT);
-  const rest = rules.slice(PREVIEW_COUNT);
+  const dfm = getDfmRules({ processId, materialId, family });
+  const rules = dfm?.rules ?? [];
+  const dfmPreview = rules.slice(0, DFM_PREVIEW);
+  const dfmRest = rules.slice(DFM_PREVIEW);
+
+  const finishes = getFinishCompatibility({ processId, materialId, family });
+  const finishRows = finishes
+    ? [
+        ...finishes.compatible,
+        ...finishes.conditional,
+        ...finishes.incompatible.slice(0, 3),
+      ]
+    : [];
+  const finishPreview = finishRows.slice(0, FINISH_PREVIEW);
+  const finishRest = finishRows.slice(FINISH_PREVIEW);
 
   return (
     <Card className="h-full rounded-2xl border-[#e2e8f0] bg-white shadow-[0_4px_18px_#132a4908] transition duration-150 hover:border-[#8eb7ef]">
@@ -53,7 +74,7 @@ export function CompatibleLinkCard({
               </Badge>
             </div>
             <ul className="mt-2 space-y-1.5">
-              {preview.map((rule) => (
+              {dfmPreview.map((rule) => (
                 <li
                   key={rule.id}
                   className="text-[12px] leading-snug text-[#17263b]"
@@ -61,12 +82,14 @@ export function CompatibleLinkCard({
                   <span className="font-semibold text-[#385b80]">
                     {rule.title}.
                   </span>{" "}
-                  <span className="text-[#52647b]">{truncateGuidance(rule.guidance)}</span>
+                  <span className="text-[#52647b]">
+                    {truncateGuidance(rule.guidance)}
+                  </span>
                 </li>
               ))}
             </ul>
 
-            {rest.length > 0 && (
+            {dfmRest.length > 0 && (
               <details className="group/dfm mt-2">
                 <summary
                   className={cn(
@@ -75,10 +98,10 @@ export function CompatibleLinkCard({
                   )}
                 >
                   <ChevronDown className="size-3.5 transition group-open/dfm:rotate-180" />
-                  {rest.length} more rule{rest.length === 1 ? "" : "s"}
+                  {dfmRest.length} more rule{dfmRest.length === 1 ? "" : "s"}
                 </summary>
                 <ul className="mt-2 space-y-1.5 border-t border-[#e2e8f0] pt-2">
-                  {rest.map((rule) => (
+                  {dfmRest.map((rule) => (
                     <li
                       key={rule.id}
                       className="text-[12px] leading-snug text-[#17263b]"
@@ -92,17 +115,66 @@ export function CompatibleLinkCard({
                     </li>
                   ))}
                 </ul>
-                {set?.disclaimer ? (
+                {dfm?.disclaimer ? (
                   <p className="mt-2 text-[10px] leading-relaxed text-[#8a5a12]">
-                    {set.disclaimer}
+                    {dfm.disclaimer}
                   </p>
                 ) : null}
               </details>
             )}
 
-            {rest.length === 0 && set?.disclaimer ? (
+            {dfmRest.length === 0 && dfm?.disclaimer ? (
               <p className="mt-2 text-[10px] leading-relaxed text-[#8a5a12]">
                 Not shop standards — verify with tooling.
+              </p>
+            ) : null}
+          </div>
+        )}
+
+        {finishPreview.length > 0 && (
+          <div className="mt-3 rounded-[10px] border border-[#e2e8f0] bg-[#fbfcfe] px-3 py-2.5">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] font-extrabold tracking-[0.5px] text-[#2670cc]">
+                Finishes
+              </span>
+              <Badge className="rounded-full bg-[#fff4df] px-2 py-0.5 text-[10px] font-semibold text-[#8a5a12]">
+                Educational · grade-dependent
+              </Badge>
+            </div>
+            <ul className="mt-2 space-y-1.5">
+              {finishPreview.map((row) => (
+                <FinishRow key={row.id} row={row} />
+              ))}
+            </ul>
+
+            {finishRest.length > 0 && (
+              <details className="group/fin mt-2">
+                <summary
+                  className={cn(
+                    "flex cursor-pointer list-none items-center gap-1 text-[12px] font-semibold text-[#2169c7]",
+                    "[&::-webkit-details-marker]:hidden"
+                  )}
+                >
+                  <ChevronDown className="size-3.5 transition group-open/fin:rotate-180" />
+                  {finishRest.length} more finish
+                  {finishRest.length === 1 ? "" : "es"}
+                </summary>
+                <ul className="mt-2 space-y-1.5 border-t border-[#e2e8f0] pt-2">
+                  {finishRest.map((row) => (
+                    <FinishRow key={row.id} row={row} />
+                  ))}
+                </ul>
+                {finishes?.disclaimer ? (
+                  <p className="mt-2 text-[10px] leading-relaxed text-[#8a5a12]">
+                    {finishes.disclaimer}
+                  </p>
+                ) : null}
+              </details>
+            )}
+
+            {finishRest.length === 0 && finishes?.disclaimer ? (
+              <p className="mt-2 text-[10px] leading-relaxed text-[#8a5a12]">
+                Screen only — confirm with the finisher and grade sheet.
               </p>
             ) : null}
           </div>
@@ -117,6 +189,44 @@ export function CompatibleLinkCard({
         </Link>
       </CardContent>
     </Card>
+  );
+}
+
+function FinishRow({ row }: { row: FinishCompatibilityNote }) {
+  return (
+    <li className="text-[12px] leading-snug text-[#17263b]">
+      <span className="inline-flex flex-wrap items-center gap-1.5">
+        <span className="font-semibold text-[#385b80]">
+          {finishLabel(row.finishId)}
+        </span>
+        <FitChip fit={row.fit} />
+      </span>
+      <span className="mt-0.5 block text-[#52647b]">
+        {truncateGuidance(row.note, 120)}
+      </span>
+    </li>
+  );
+}
+
+function FitChip({ fit }: { fit: FinishCompatibilityNote["fit"] }) {
+  if (fit === "compatible") {
+    return (
+      <span className="rounded-full bg-[#e7f6ec] px-1.5 py-0.5 text-[10px] font-semibold text-[#1f6b3a]">
+        Fits
+      </span>
+    );
+  }
+  if (fit === "conditional") {
+    return (
+      <span className="rounded-full bg-[#fff4df] px-1.5 py-0.5 text-[10px] font-semibold text-[#8a5a12]">
+        Conditional
+      </span>
+    );
+  }
+  return (
+    <span className="rounded-full bg-[#fdecec] px-1.5 py-0.5 text-[10px] font-semibold text-[#9b2c2c]">
+      Avoid
+    </span>
   );
 }
 

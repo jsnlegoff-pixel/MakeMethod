@@ -7,3 +7,4 @@ export * from "./wizard";
 export * from "./simulation-properties";
 export * from "./sourced-properties";
 export * from "./dfm-rules";
+export * from "./finishes";

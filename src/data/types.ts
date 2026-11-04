@@ -358,3 +358,50 @@ export const SOLIDWORKS_LIBRARY_NOTE =
 
 export const DFM_DISCLAIMER =
   "Educational rules of thumb — not shop standards, mold-maker specs, or certified DFM. Confirm with tooling, process, and grade experts before release.";
+
+/** Secondary surface finishes / coatings (not wizard cosmetic FinishId). */
+export type SurfaceFinishId =
+  | "anodize"
+  | "powder-coat"
+  | "wet-paint"
+  | "plate-nickel"
+  | "plate-chrome"
+  | "plate-zinc"
+  | "passivation"
+  | "bead-blast"
+  | "polish"
+  | "brush"
+  | "pad-print"
+  | "silkscreen";
+
+export type FinishFit = "compatible" | "conditional" | "incompatible";
+
+export type FinishNoteStatus = "educational" | "unverified";
+
+export interface FinishDefinition {
+  id: SurfaceFinishId;
+  name: string;
+  shortLabel: string;
+  summary: string;
+}
+
+export interface FinishCompatibilityNote {
+  id: string;
+  finishId: SurfaceFinishId;
+  fit: FinishFit;
+  note: string;
+  status: FinishNoteStatus;
+}
+
+export interface FinishCompatibilitySet {
+  processId: ProcessId;
+  materialId?: MaterialId;
+  family?: MaterialFamily;
+  compatible: FinishCompatibilityNote[];
+  conditional: FinishCompatibilityNote[];
+  incompatible: FinishCompatibilityNote[];
+  disclaimer: string;
+}
+
+export const FINISH_DISCLAIMER =
+  "Educational finish screening only — grade, temper, alloy temper, pretreatment, and shop capability decide real success. Not a coating specification or certification.";
